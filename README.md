@@ -1,6 +1,6 @@
 ![Panel AI Logo](https://raw.githubusercontent.com/MarcSkovMadsen/panel-ai/main/assets/images/panel-ai-logo.png)
 
-[![PyPI version](https://badge.fury.io/py/panel-sketch.svg)](https://pypi.org/project/panel-ai/) [![Downloads](https://pepy.tech/badge/panel-ai/month)](https://pepy.tech/project/panel-ai) ![Python Versions](https://img.shields.io/badge/python-3.6%20%7C%203.7%20%7C%203.8%20%7C%203.9-blue) ![PyPI - License](https://img.shields.io/pypi/l/panel-ai) ![Style Black](https://warehouse-camo.ingress.cmh1.psfhosted.org/fbfdc7754183ecf079bc71ddeabaf88f6cbc5c00/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f636f64652532307374796c652d626c61636b2d3030303030302e737667)
+[![PyPI version](https://badge.fury.io/py/panel-ai.svg)](https://pypi.org/project/panel-ai/) [![Downloads](https://pepy.tech/badge/panel-ai/month)](https://pepy.tech/project/panel-ai) ![Python Versions](https://img.shields.io/badge/python-3.6%20%7C%203.7%20%7C%203.8%20%7C%203.9-blue) ![PyPI - License](https://img.shields.io/pypi/l/panel-ai) ![Style Black](https://warehouse-camo.ingress.cmh1.psfhosted.org/fbfdc7754183ecf079bc71ddeabaf88f6cbc5c00/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f636f64652532307374796c652d626c61636b2d3030303030302e737667)
 
 [![Follow on Twitter](https://img.shields.io/twitter/follow/MarcSkovMadsen.svg?style=social)](https://twitter.com/MarcSkovMadsen)
 
@@ -8,7 +8,7 @@
 
 Visualize, communicate and share your AI Models in no time with `panel-ai`.
 
-Easy to use AI components and examples for the Jupyter Notebook, your favorite Editor/ ID and your next AI App.
+Easy to use AI components and examples for the Jupyter Notebook, your favorite Editor/ IDE and your next AI App.
 
 | Jupyter Notebook | Jupyter Labs | Panel Apps |
 | - | - | - |

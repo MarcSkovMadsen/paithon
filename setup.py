@@ -14,6 +14,7 @@ VERSION = (ROOT / "VERSION").read_text().strip()
 install_requires = [
     "panel==0.12.4",
     "bokeh==2.4.1",
+    "holoviews==1.14.6",
 ]
 
 _recommended: List[str] = []
@@ -31,12 +32,17 @@ _tests = [
     "rope",
     "twine",
     "wheel",
+    "types-requests",
 ]
 
 _examples = [
     "notebook",
     "jupyterlab",
     "pandas",
+    "transformers",
+    "Pillow",
+    "requests",
+    "timm",
 ]
 
 _doc: List[str] = []
@@ -53,8 +59,7 @@ extras_require["all"] = sorted(set(sum(extras_require.values(), [])))
 setuptools.setup(
     name="panel-ai",
     version=VERSION,
-    description="""Easy to use component and examples for your machine learning or deep learning
-    workflows.""",
+    description="""Easy to use component and examples for your ai workflows.""",
     long_description=long_description,
     long_description_content_type="text/markdown",
     author="Marc Skov Madsen",
@@ -63,7 +68,7 @@ setuptools.setup(
     license="MIT",
     url="https://github.com/MarcSkovMadsen/panel-ai",
     # My Project contains more folders/ packages but they should not be included
-    packages=setuptools.find_packages(include=["panel_ai", "panel_ai.*"]),
+    packages=setuptools.find_packages(include=["src/panel_ai", "src/panel_ai.*"]),
     include_package_data=True,
     classifiers=[
         # I would like to indicate that this package is a package for the Panel framework

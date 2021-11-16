@@ -1,6 +1,7 @@
+"""A Module of tools for Image Classification"""
 import random
 from io import BytesIO
-from typing import Dict, Tuple
+from typing import Any, Dict, List, Tuple
 
 import holoviews as hv
 import panel as pn
@@ -9,16 +10,26 @@ import requests
 from bokeh.models import HoverTool
 from PIL import Image
 
-from .base.pillow import ImageViewer
+from ..base.svgs import IMAGE_CLASSIFIER_ICON
+from .base.pillow import ImageViewer, IMAGE_EXAMPLES, load_image_from_url
 
 hv.extension("bokeh")
 
 LAYOUT_PARAMETERS = {"background", "height", "width", "sizing_mode"}
 
-IMAGE_CLASSIFIER_ICON = """<svg xmlns="http://www.w3.org/1500/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true" fill="currentColor" focusable="false" role="img" height="1em" preserveAspectRatio="xMidYMid meet" viewBox="0 0 32 32"><polygon points="4 20 4 22 8.586 22 2 28.586 3.414 30 10 23.414 10 28 12 28 12 20 4 20"></polygon><path d="M19,14a3,3,0,1,0-3-3A3,3,0,0,0,19,14Zm0-4a1,1,0,1,1-1,1A1,1,0,0,1,19,10Z"></path><path d="M26,4H6A2,2,0,0,0,4,6V16H6V6H26V21.17l-3.59-3.59a2,2,0,0,0-2.82,0L18,19.17,11.8308,13l-1.4151,1.4155L14,18l2.59,2.59a2,2,0,0,0,2.82,0L21,19l5,5v2H16v2H26a2,2,0,0,0,2-2V6A2,2,0,0,0,26,4Z"></path></svg>"""
 
 
-def dummy_model(image: Image.Image):
+
+# pylint: disable=unused-argument
+def dummy_model(image: Image.Image) -> Tuple[Any, Any, List[Dict]]:
+    """Returns a the inputs, outputs, output_json of an Image classification
+
+    Args:
+        image (Image.Image): The image to classify
+
+    Returns:
+        Tuple[Any, Any, List[Dict]]: the inputs, outputs, output_json
+    """
     val = float(random.randint(0, 100)) / 100
     return (
         None,
@@ -31,7 +42,7 @@ def dummy_model(image: Image.Image):
             {"label": "Siamese cat, Siamese", "score": val * 1 / 15},
         ],
     )
-
+# pylint: enable=unused-argument
 
 def extract_layout_parameters(params: Dict) -> Tuple[Dict, Dict]:
     layout_params = {}
@@ -42,28 +53,6 @@ def extract_layout_parameters(params: Dict) -> Tuple[Dict, Dict]:
         else:
             non_layout_params[key] = val
     return non_layout_params, layout_params
-
-
-class ImageExample(param.Parameterized):
-    url = param.String()
-
-
-EXAMPLES = [
-    {
-        "url": "https://huggingface.co/datasets/mishig/sample_images/resolve/main/tiger.jpg",
-        "name": "Tiger",
-    },
-    {
-        "url": "https://huggingface.co/datasets/mishig/sample_images/resolve/main/teapot.jpg",
-        "name": "Teapot",
-    },
-    {
-        "url": "https://huggingface.co/datasets/mishig/sample_images/resolve/main/palace.jpg",
-        "name": "Palace",
-    },
-]
-EXAMPLES = [ImageExample(**kwargs) for kwargs in EXAMPLES]
-
 
 def to_plot(output_json, height=200, color="red", bgcolor=None):
     if not output_json:
@@ -102,7 +91,7 @@ class ImageClassifier(pn.viewable.Viewer):
     """
 
     icon = param.String(IMAGE_CLASSIFIER_ICON)
-    example = param.Selector(EXAMPLES, label="example")
+    example = param.Selector(IMAGE_EXAMPLES, label="example")
 
     model = param.Parameter()
 
@@ -136,7 +125,7 @@ class ImageClassifier(pn.viewable.Viewer):
         )
         self.layout_example = pn.Param(self.param.example, expand_button=False, expand=True)[0]
         self.layout_example.name = "Example"
-        self.layout_image = ImageViewer(background="blue")
+        self.layout_image = ImageViewer()
         self.layout_plot = pn.bind(to_plot, output_json=self.param.output_json)
         self.layout_container[:] = [
             f"<h1>{self.icon} Image Classification</h1>",
@@ -151,7 +140,7 @@ class ImageClassifier(pn.viewable.Viewer):
         return self.layout_container
 
     def load_image(self, url):
-        self.image = Image.open(requests.get(url, stream=True, verify=False).raw)
+        self.image = load_image_from_url(url)
 
     @param.depends("image", watch=True)
     def _update_image(self):
@@ -168,7 +157,7 @@ class ImageClassifier(pn.viewable.Viewer):
 
     @param.depends("example", watch=True)
     def _update_image_from_example(self):
-        self.load_image(self.example.url)
+        self.image = self.example.image
 
     @pn.depends("layout_fileinput.value", watch=True)
     def _update_image_from_upload(self):

@@ -8,7 +8,7 @@ import PIL
 import requests
 
 
-def load_image_from_url(url: str, verify: bool=False) -> PIL.Image.Image:
+def load_image_from_url(url: str, verify: bool = False) -> PIL.Image.Image:
     """Returns an image from from a url
 
     Args:
@@ -19,6 +19,7 @@ def load_image_from_url(url: str, verify: bool=False) -> PIL.Image.Image:
         PIL.Image.Image: The PIL Image
     """
     return PIL.Image.open(requests.get(url, stream=True, verify=verify).raw)
+
 
 def image_to_base64_string(img: PIL.Image.Image) -> str:
     """Returns a base64 encoded string
@@ -58,27 +59,32 @@ class ImageExample(param.Parameterized):
         self._image = None
 
     @property
-    def image(self):
+    def image(self) -> PIL.Image.Image:
+        """Return the PIL Image of the example
+
+        Returns:
+            PIL.Image.Image: A PIL Image
+        """
         if not self._image and self.url:
             self._image = load_image_from_url(self.url)
         return self._image
+
 
 IMAGE_EXAMPLES = [
     ImageExample(
         url="https://huggingface.co/datasets/mishig/sample_images/resolve/main/tiger.jpg",
         name="Tiger",
     ),
-
     ImageExample(
         url="https://huggingface.co/datasets/mishig/sample_images/resolve/main/teapot.jpg",
         name="Teapot",
     ),
-
     ImageExample(
         url="https://huggingface.co/datasets/mishig/sample_images/resolve/main/palace.jpg",
         name="Palace",
     ),
 ]
+
 
 class ImageViewer(pn.reactive.ReactiveHTML):
     """An ImageViewer for PIL Images"""

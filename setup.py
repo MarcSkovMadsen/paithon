@@ -15,6 +15,7 @@ install_requires = [
     "panel==0.12.4",
     "bokeh==2.4.1",
     "holoviews==1.14.6",
+    "ansicov",
 ]
 
 _recommended: List[str] = []
@@ -28,6 +29,7 @@ _tests = [
     "mypy",
     "pylint>=2.6.0",
     "pytest",
+    "pytest-mock",
     "pytest-cov",
     "rope",
     "twine",

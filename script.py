@@ -1,27 +1,38 @@
+import random
+
 import panel as pn
 import param
-import PIL
+
+pn.extension(sizing_mode="stretch_width")
 
 
-class ImageViewer(pn.reactive.ReactiveHTML):
-    data_url = param.String(default="test_string", constant=True)
-
-    _template = """<img id="value" src="" style="height:100%;width:100%">${data_url}</img>"""
-
-    @property
-    def image(self) -> PIL.Image.Image:
-        return self._image
-
-    @image.setter
-    def image(self, value: PIL.Image.Image):
-        self._image = value
-
-    def __init__(self, image: PIL.Image.Image, params):
-        super().__init__(**params)
-        self.image = image
+def dummy_model():
+    val = float(random.randint(0, 100)) / 100
+    return [
+        {"label": "Egyptian cat", "score": val * 5 / 15},
+        {"label": "tabby, tabby cat", "score": val * 4 / 15},
+    ]
 
 
-if __name__.startswith("bokeh"):
-    image = PIL.Image.new("RGBA", size=(50, 50), color=(155, 0, 0))
-    image.format = "PNG"
-    ImageViewer(image=image).servable()
+class ClassificationPlot(pn.reactive.ReactiveHTML):
+    output_json = param.List()
+    data = param.List(constant=True)
+    _template = """<div id="component"></div>"""
+    _scripts = {
+        "output_json": """console.log("x")""",
+    }
+
+
+plot = ClassificationPlot(output_json=dummy_model())
+
+run_button = pn.widgets.Button(name="Run Classification", button_type="primary")
+
+
+def run_classification(_):
+    with param.edit_constant(plot):
+        plot.output_json = [dummy_model()]
+
+
+run_button.on_click(run_classification)
+
+pn.Column(run_button, plot, plot.controls(jslink=True)).servable()

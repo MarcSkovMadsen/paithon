@@ -5,6 +5,8 @@ invoke --list
 from the command line for a list of all available commands.
 """
 
+import glob
+
 from invoke import task
 
 
@@ -166,8 +168,6 @@ Serves the test apps
 ====================
 """
     )
-    import glob
-
     files = " ".join(glob.glob("tests/apps/*.py"))
     command.run(
         f"panel serve {files} --autoreload",

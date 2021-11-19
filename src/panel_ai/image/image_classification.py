@@ -6,18 +6,14 @@ from typing import Any, Dict, List, Tuple
 import holoviews as hv
 import panel as pn
 import param
-import requests
-from bokeh.models import HoverTool
 from PIL import Image
 
+from ..base.classification import ClassificationPlot
+from ..base.component import extract_layout_parameters
 from ..base.svgs import IMAGE_CLASSIFIER_ICON
-from .base.pillow import ImageViewer, IMAGE_EXAMPLES, load_image_from_url
+from .base.pillow import IMAGE_EXAMPLES, ImageViewer, load_image_from_url
 
 hv.extension("bokeh")
-
-LAYOUT_PARAMETERS = {"background", "height", "width", "sizing_mode"}
-
-
 
 
 # pylint: disable=unused-argument
@@ -42,47 +38,12 @@ def dummy_model(image: Image.Image) -> Tuple[Any, Any, List[Dict]]:
             {"label": "Siamese cat, Siamese", "score": val * 1 / 15},
         ],
     )
+
+
 # pylint: enable=unused-argument
 
-def extract_layout_parameters(params: Dict) -> Tuple[Dict, Dict]:
-    layout_params = {}
-    non_layout_params = {}
-    for key, val in params.items():
-        if key in LAYOUT_PARAMETERS:
-            layout_params[key] = val
-        else:
-            non_layout_params[key] = val
-    return non_layout_params, layout_params
 
-def to_plot(output_json, height=200, color="red", bgcolor=None):
-    if not output_json:
-        return None
-    output_json = sorted(output_json, key=lambda x: x["score"])
-    data = output_json
-    plot = hv.Bars(data, hv.Dimension("label"), "score")
-
-    hover = HoverTool(tooltips=[("Score", "@score{0.00}")])
-
-    plot.opts(
-        responsive=True,
-        height=height,
-        color=color,
-        bgcolor=bgcolor,
-        invert_axes=True,
-        ylim=(0.0, 1.0),
-        default_tools=["save", hover],
-    )
-    # position = round(data[-1]["score"],2)
-    data_labels = [
-        {"label": item["label"], "position": item["score"], "score": round(item["score"], 2)}
-        for item in data
-    ]
-    labels = hv.Labels(data=data_labels, kdims=["label", "position"], vdims="score")
-    labels.opts(default_tools=["save"], labelled=[])
-    return plot * labels
-
-
-class ImageClassifier(pn.viewable.Viewer):
+class ImageClassifier(pn.viewable.Viewer):  # pylint: disable=too-many-instance-attributes
     """A widget for classifying images
 
 
@@ -126,7 +87,7 @@ class ImageClassifier(pn.viewable.Viewer):
         self.layout_example = pn.Param(self.param.example, expand_button=False, expand=True)[0]
         self.layout_example.name = "Example"
         self.layout_image = ImageViewer()
-        self.layout_plot = pn.bind(to_plot, output_json=self.param.output_json)
+        self.layout_plot = ClassificationPlot()
         self.layout_container[:] = [
             f"<h1>{self.icon} Image Classification</h1>",
             self.layout_example,
@@ -136,10 +97,20 @@ class ImageClassifier(pn.viewable.Viewer):
             self.layout_json,
         ]
 
+        if self.image:
+            self.param.trigger("image")
+        else:
+            self.image = self.example.image
+
     def __panel__(self):
         return self.layout_container
 
-    def load_image(self, url):
+    def load_image(self, url: str):
+        """Loads an image from an url
+
+        Args:
+            url (str): The url to load
+        """
         self.image = load_image_from_url(url)
 
     @param.depends("image", watch=True)
@@ -148,12 +119,15 @@ class ImageClassifier(pn.viewable.Viewer):
 
     @param.depends("image", watch=True)
     def _run_model(self):
-        self.inputs, self.outputs, self.output_json = self.model(self.image)
+        if self.model:
+            self.inputs, self.outputs, self.output_json = self.model(self.image)
+        else:
+            self.inputs, self.outputs, self.output_json = None, None, []
 
     @param.depends("output_json", watch=True)
     def _update_json(self):
         self.layout_json.object = self.output_json
-        self.plot = to_plot(self.output_json)
+        self.layout_plot.output_json = self.output_json
 
     @param.depends("example", watch=True)
     def _update_image_from_example(self):

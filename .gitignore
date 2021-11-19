@@ -133,3 +133,5 @@ panel_ai/node_modules
 test_results
 !panel_ai/dist
 .vscode
+script.py
+scripts.json

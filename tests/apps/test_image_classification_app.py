@@ -10,7 +10,6 @@ from panel_ai.image.image_classification import ImageClassifier, dummy_model
 def test_app():
     """Test of the ImageClassifier"""
     classifier = ImageClassifier(model=dummy_model, sizing_mode="stretch_width")
-    classifier.load_image(url="http://images.cocodataset.org/val2017/000000039769.jpg")
     return pn.Row(classifier)
 
 

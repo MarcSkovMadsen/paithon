@@ -1,6 +1,7 @@
 import panel as pn
 import param
 
+
 class MyElement(pn.reactive.ReactiveHTML):
     data_url = param.String("abcd")
     _template = """<div id="component">Hi</div>"""

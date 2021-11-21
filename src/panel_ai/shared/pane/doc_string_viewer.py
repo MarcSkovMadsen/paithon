@@ -8,14 +8,14 @@ from ...base.component import extract_layout_parameters, get_theme
 
 # Inspiration at https://iterm2colorschemes.com/
 ANSI_THEMES = {
-    "Solarized": { # https://ethanschoonover.com/solarized/
+    "Solarized": {  # https://ethanschoonover.com/solarized/
         "default": {
-            "background": "#fdf6e3", # Background
-            "color": "#657b83", # Text
-            "red": "#cb4b16", # Parameters changed, 2nd row in table
-            "green": "#859900", # heading
-            "blue": "#268bd2", # Table Header, 1st row in table
-            "cyan": "#2aa198", # soft bound values
+            "background": "#fdf6e3",  # Background
+            "color": "#657b83",  # Text
+            "red": "#cb4b16",  # Parameters changed, 2nd row in table
+            "green": "#859900",  # heading
+            "blue": "#268bd2",  # Table Header, 1st row in table
+            "cyan": "#2aa198",  # soft bound values
         },
         "dark": {
             "background": "#002b36",
@@ -23,33 +23,33 @@ ANSI_THEMES = {
             "red": "#cb4b16",
             "green": "#859900",
             "blue": "#268bd2",
-            "cyan": "#2aa198", # soft bound values
-        }
+            "cyan": "#2aa198",  # soft bound values
+        },
     },
-    "Tomorrow": { # https://github.com/chriskempson/tomorrow-theme
+    "Tomorrow": {  # https://github.com/chriskempson/tomorrow-theme
         "default": {
-            "background": "inherit", # "#ffffff",
-            "color": "#4d4d4c", # Foreground
+            "background": "inherit",  # "#ffffff",
+            "color": "#4d4d4c",  # Foreground
             "red": "#c82829",
             "green": "#718c00",
             "blue": "#4271ae",
-            "cyan": "#3e999f", # aqua
+            "cyan": "#3e999f",  # aqua
         },
         "dark": {
-            "background": "inherit", # "#1d1f21",
+            "background": "inherit",  # "#1d1f21",
             "color": "#c5c8c6",
             "red": "#cc6666",
             "green": "#b5bd68",
             "blue": "#81a2be",
             "cyan": "#2aa198",
-        }
-    }
+        },
+    },
 }
+
 
 class DocStringViewer(pn.viewable.Viewer):
     """The DocStringViewer makes viewing the docstring of a Parameterized class easy and
-beautiful.
-"""
+    beautiful."""
 
     object = param.ClassSelector(
         class_=param.Parameterized,
@@ -64,23 +64,30 @@ beautiful.
         doc="""
     The theme of the component: 'default' or 'dark.""",
     )
-    palette = param.Selector(default="Tomorrow", objects=ANSI_THEMES.keys(), doc="""
+    palette = param.Selector(
+        default="Tomorrow",
+        objects=ANSI_THEMES.keys(),
+        doc="""
     For example `solarized`.
-    """)
-    _html = param.String(constant=True, doc="""
+    """,
+    )
+    _html = param.String(
+        constant=True,
+        doc="""
     The html representation of the doc string
-    """)
+    """,
+    )
 
-    def __init__(self, object=None, **params):
+    def __init__(self, object=None, **params):  # pylint: disable=abstract-method, redefined-builtin
         params, layout_params = extract_layout_parameters(params)
         if "theme" not in params:
-            params["theme"]=get_theme()
+            params["theme"] = get_theme()
         if object:
-            params["object"]=object
+            params["object"] = object
         super().__init__(**params)
         self._html_pane = pn.pane.HTML(sizing_mode="stretch_both")
-        if not "scroll" in layout_params:
-            layout_params["scroll"]=True
+        if "scroll" not in layout_params:
+            layout_params["scroll"] = True
         self.layout = pn.Column(self._html_pane, **layout_params)
         self._update_html()
 
@@ -90,11 +97,11 @@ beautiful.
     @param.depends("object", "theme", "palette", watch=True)
     def _update_html(self):
         with param.edit_constant(self):
-            doc=self.object.__doc__
+            doc = self.object.__doc__
             if doc:
-                doc="\n".join(doc.split("\n")[1:])
+                doc = "\n".join(doc.split("\n")[1:])
             else:
-                doc=""
+                doc = ""
             self._html = self._to_html(doc, self.theme, self.palette)
 
     @param.depends("_html", watch=True)

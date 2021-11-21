@@ -41,26 +41,26 @@ render=()=>{
   }
   const msgElement=drop_message
   const dt=data
-  function setUrl(url){
+  function setUri(uri){
     data.progress=50
-    data._url=url;
-    const [, mime_type="",, value=""] = url.split(/[:;,]/, 4)
+    data.uri=uri;
+    const [, mime_type="",, value=""] = uri.split(/[:;,]/, 4)
     data.mime_type=mime_type
     data.progress=0
   }
-  function showImage(dataurl){
-    imageRegion.src = dataurl;
+  function showImage(uri){
+    imageRegion.src = uri;
     msgElement.innerText = ""
     imageRegion.style.display="inline"
     msgElement.style.display="none"
   }
-  if (data._url){
-    showImage(data._url)
+  if (data.uri){
+    showImage(data.uri)
   }
   state.showImage=showImage
   function showMessage(msg){
     imageRegion.src = "";
-    dt._url=""
+    dt.uri=""
     dt.filename=""
     dt.mime_type=""
 
@@ -89,16 +89,13 @@ render=()=>{
   function previewAnduploadImage(image) {
     var reader = new FileReader();
     reader.onload = function(e) {
-      setUrl(e.target.result);
+      setUri(e.target.result);
       showImage(e.target.result);
     }
     reader.readAsDataURL(image);
     data.filename=image.name
   }
   dropRegion.addEventListener('drop', handleDrop, false);
-}
-url=()=>{
-  console.log("url")
 }
 fit=()=>{
   imageRegion.style.objectFit=data.fit

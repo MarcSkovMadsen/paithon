@@ -11,8 +11,8 @@ from PIL import Image
 from ..base.classification import ClassificationPlot
 from ..base.component import extract_layout_parameters
 from ..base.svgs import IMAGE_CLASSIFIER_ICON
-from .base.pillow import IMAGE_EXAMPLES, ImageViewer, load_image_from_url
 from ..base.template import ACCENT_COLOR
+from .base.pillow import IMAGE_EXAMPLES, ImageViewer, load_image_from_url
 
 hv.extension("bokeh")
 
@@ -47,8 +47,8 @@ def dummy_model(image: Image.Image) -> Tuple[Any, Any, List[Dict]]:
 class ImageClassifier(pn.viewable.Viewer):  # pylint: disable=too-many-instance-attributes
     """A widget for classifying images
 
-Inspired by the Hugging Face [ImageClassification](https://huggingface-widgets.netlify.app/)
-widget.
+    Inspired by the Hugging Face [ImageClassification](https://huggingface-widgets.netlify.app/)
+    widget.
     """
 
     icon = param.String(IMAGE_CLASSIFIER_ICON)
@@ -85,17 +85,19 @@ widget.
         self.layout_fileinput = pn.widgets.FileInput(
             accept=".png,.jpg", css_classes=["file-upload"]
         )
-        if len(IMAGE_EXAMPLES)<=3:
-            widgets={
+        if len(IMAGE_EXAMPLES) <= 3:
+            widgets = {
                 "example": {
                     "type": pn.widgets.RadioButtonGroup,
                     "button_type": "success",
-                    "sizing_mode": "fixed"
+                    "sizing_mode": "fixed",
                 }
             }
         else:
-            widgets=None
-        self.layout_example = pn.Param(self.param.example, expand_button=False, expand=False, widgets=widgets)[0]
+            widgets = None
+        self.layout_example = pn.Param(
+            self.param.example, expand_button=False, expand=False, widgets=widgets
+        )[0]
         self.layout_example.name = "Example"
         self.layout_image = ImageViewer()
         self.layout_plot = ClassificationPlot(color=self.accent_color, name="Plot")
@@ -104,7 +106,7 @@ widget.
             self.layout_example,
             self.layout_fileinput,
             self.layout_image,
-            pn.Tabs(self.layout_plot,self.layout_json, dynamic=True)
+            pn.Tabs(self.layout_plot, self.layout_json, dynamic=True),
         ]
 
         if self.image:

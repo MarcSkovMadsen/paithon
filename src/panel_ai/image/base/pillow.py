@@ -6,8 +6,8 @@ import urllib
 import panel as pn
 import param
 import PIL
-from param.parameterized import String
 import requests
+from param.parameterized import String
 
 
 # Currently False. Should be changed to True later
@@ -23,7 +23,8 @@ def load_image_from_url(url: str, verify: bool = False) -> PIL.Image.Image:
     """
     return PIL.Image.open(requests.get(url, stream=True, verify=verify).raw)
 
-def image_from_data_url(data_url: str) -> PIL.Image.Image:
+
+def image_from_data_uri(data_url: str) -> PIL.Image.Image:
     """Returns an image from from a dataurl
 
     Args:
@@ -33,7 +34,6 @@ def image_from_data_url(data_url: str) -> PIL.Image.Image:
         PIL.Image.Image: The PIL Image
     """
     return PIL.Image.open(urllib.request.urlopen(data_url).file)
-
 
 
 def image_to_base64_string(img: PIL.Image.Image) -> str:
@@ -86,6 +86,11 @@ class ImageExample(param.Parameterized):
 
     @property
     def data_url(self) -> String:
+        """Returns a data_url from the pillow image
+
+        Returns:
+            String: a data_url
+        """
         return image_to_data_url(self.image)
 
 

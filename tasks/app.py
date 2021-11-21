@@ -5,6 +5,7 @@ import glob
 
 from invoke import task
 
+
 @task
 def serve(command):
     """Serves the test apps

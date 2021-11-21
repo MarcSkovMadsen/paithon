@@ -5,7 +5,6 @@ invoke --list
 from the command line for a list of all available commands.
 """
 
-import glob
 
 from invoke import task
 

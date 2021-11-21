@@ -1,5 +1,4 @@
 """Test of the image_classification module"""
-from holoviews.element.raster import Image
 from panel_ai.image.base.pillow import IMAGE_EXAMPLES
 from panel_ai.image.image_classification import ImageClassifier, dummy_model
 
@@ -20,20 +19,22 @@ def test_can_change_example():
     assert classifier.image
     assert classifier.image != image
 
+
 def test_can_load_from_url():
     """Can load and image from a url"""
-    classifier=ImageClassifier()
+    classifier = ImageClassifier()
     assert not classifier.image
     classifier.load_image(IMAGE_EXAMPLES[0].url)
     assert classifier.image
 
+
 def test_can_instantiate_with_image_argument():
     """We can provide an image as argument"""
     # Given
-    tmp=ImageClassifier()
+    tmp = ImageClassifier()
     tmp.load_image(IMAGE_EXAMPLES[0].url)
-    image=tmp.image
+    image = tmp.image
     # When
     classifier = ImageClassifier(image=image)
     # Then
-    assert classifier.image==image
+    assert classifier.image == image

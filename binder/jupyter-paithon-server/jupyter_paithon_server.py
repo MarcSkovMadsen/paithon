@@ -32,7 +32,7 @@ def panel_serve_examples():
         "timeout": 360,
         "launcher_entry": {
             "enabled": True,
-            "title": "Panel AI Apps",
+            "title": "Paithon Apps",
             "icon_path": ICON_PATH,
         },
     }

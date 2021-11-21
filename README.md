@@ -1,4 +1,4 @@
-![Panel AI Logo](https://raw.githubusercontent.com/MarcSkovMadsen/paithon/main/assets/images/paithon-logo.png)
+![Paithon Logo](https://raw.githubusercontent.com/MarcSkovMadsen/paithon/main/assets/images/paithon-logo.png)
 
 [![PyPI version](https://badge.fury.io/py/paithon.svg)](https://pypi.org/project/paithon/) [![Downloads](https://pepy.tech/badge/paithon/month)](https://pepy.tech/project/paithon) ![Python Versions](https://img.shields.io/badge/python-3.6%20%7C%203.7%20%7C%203.8%20%7C%203.9-blue) ![PyPI - License](https://img.shields.io/pypi/l/paithon) ![Style Black](https://warehouse-camo.ingress.cmh1.psfhosted.org/fbfdc7754183ecf079bc71ddeabaf88f6cbc5c00/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f636f64652532307374796c652d626c61636b2d3030303030302e737667)
 

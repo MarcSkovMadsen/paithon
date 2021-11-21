@@ -1,13 +1,16 @@
 """Tools for working with pillow"""
 import base64
 import io
+import urllib
 
 import panel as pn
 import param
 import PIL
+from param.parameterized import String
 import requests
 
 
+# Currently False. Should be changed to True later
 def load_image_from_url(url: str, verify: bool = False) -> PIL.Image.Image:
     """Returns an image from from a url
 
@@ -19,6 +22,18 @@ def load_image_from_url(url: str, verify: bool = False) -> PIL.Image.Image:
         PIL.Image.Image: The PIL Image
     """
     return PIL.Image.open(requests.get(url, stream=True, verify=verify).raw)
+
+def image_from_data_url(data_url: str) -> PIL.Image.Image:
+    """Returns an image from from a dataurl
+
+    Args:
+        url (str): A dataurl
+
+    Returns:
+        PIL.Image.Image: The PIL Image
+    """
+    return PIL.Image.open(urllib.request.urlopen(data_url).file)
+
 
 
 def image_to_base64_string(img: PIL.Image.Image) -> str:
@@ -68,6 +83,10 @@ class ImageExample(param.Parameterized):
         if not self._image and self.url:
             self._image = load_image_from_url(self.url)
         return self._image
+
+    @property
+    def data_url(self) -> String:
+        return image_to_data_url(self.image)
 
 
 IMAGE_EXAMPLES = [

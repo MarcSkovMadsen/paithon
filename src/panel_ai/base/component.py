@@ -3,7 +3,7 @@ from typing import Dict, Tuple
 
 import panel as pn
 
-LAYOUT_PARAMETERS = {"background", "height", "width", "sizing_mode"}
+LAYOUT_PARAMETERS = {"background", "height", "width", "sizing_mode", "scroll"}
 
 
 def get_theme() -> str:
@@ -34,4 +34,6 @@ def extract_layout_parameters(params: Dict) -> Tuple[Dict, Dict]:
             layout_params[key] = val
         else:
             non_layout_params[key] = val
+    if "name" in params:
+        non_layout_params["name"]=layout_params["name"]=params["name"]
     return non_layout_params, layout_params

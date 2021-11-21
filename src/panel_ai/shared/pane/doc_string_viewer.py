@@ -3,14 +3,53 @@
 import ansiconv
 import panel as pn
 import param
-from param.parameterized import edit_constant
 
-from panel_ai.base.component import extract_layout_parameters
+from ...base.component import extract_layout_parameters, get_theme
 
+# Inspiration at https://iterm2colorschemes.com/
+ANSI_THEMES = {
+    "Solarized": { # https://ethanschoonover.com/solarized/
+        "default": {
+            "background": "#fdf6e3", # Background
+            "color": "#657b83", # Text
+            "red": "#cb4b16", # Parameters changed, 2nd row in table
+            "green": "#859900", # heading
+            "blue": "#268bd2", # Table Header, 1st row in table
+            "cyan": "#2aa198", # soft bound values
+        },
+        "dark": {
+            "background": "#002b36",
+            "color": "#839496",
+            "red": "#cb4b16",
+            "green": "#859900",
+            "blue": "#268bd2",
+            "cyan": "#2aa198", # soft bound values
+        }
+    },
+    "Tomorrow": { # https://github.com/chriskempson/tomorrow-theme
+        "default": {
+            "background": "inherit", # "#ffffff",
+            "color": "#4d4d4c", # Foreground
+            "red": "#c82829",
+            "green": "#718c00",
+            "blue": "#4271ae",
+            "cyan": "#3e999f", # aqua
+        },
+        "dark": {
+            "background": "inherit", # "#1d1f21",
+            "color": "#c5c8c6",
+            "red": "#cc6666",
+            "green": "#b5bd68",
+            "blue": "#81a2be",
+            "cyan": "#2aa198",
+        }
+    }
+}
 
 class DocStringViewer(pn.viewable.Viewer):
     """The DocStringViewer makes viewing the docstring of a Parameterized class easy and
-    beautiful"""
+beautiful.
+"""
 
     object = param.ClassSelector(
         class_=param.Parameterized,
@@ -25,51 +64,49 @@ class DocStringViewer(pn.viewable.Viewer):
         doc="""
     The theme of the component: 'default' or 'dark.""",
     )
-    _html = param.String(constant=True)
+    palette = param.Selector(default="Tomorrow", objects=ANSI_THEMES.keys(), doc="""
+    For example `solarized`.
+    """)
+    _html = param.String(constant=True, doc="""
+    The html representation of the doc string
+    """)
 
-    def __init__(self, **params):
+    def __init__(self, object=None, **params):
         params, layout_params = extract_layout_parameters(params)
         if "theme" not in params:
-            if pn.state.session_args and "theme" in pn.state.session_args:
-                theme = pn.state.session_args.get("theme")[0].decode()
-                if theme == "dark":
-                    params["theme"] = theme
+            params["theme"]=get_theme()
+        if object:
+            params["object"]=object
         super().__init__(**params)
-
         self._html_pane = pn.pane.HTML(sizing_mode="stretch_both")
-        self.layout = pn.Column(self._html_pane, scroll=True, **layout_params)
+        if not "scroll" in layout_params:
+            layout_params["scroll"]=True
+        self.layout = pn.Column(self._html_pane, **layout_params)
         self._update_html()
 
     def __panel__(self):
         return self.layout
 
-    @param.depends("object", "theme", watch=True)
+    @param.depends("object", "theme", "palette", watch=True)
     def _update_html(self):
-        with edit_constant(self):
-            self._html = self._to_html(self.object.__doc__, self.theme)
+        with param.edit_constant(self):
+            doc=self.object.__doc__
+            if doc:
+                doc="\n".join(doc.split("\n")[1:])
+            else:
+                doc=""
+            self._html = self._to_html(doc, self.theme, self.palette)
 
     @param.depends("_html", watch=True)
     def _update_html_pane(self):
         self._html_pane.object = self._html
 
     @classmethod
-    def _to_html(cls, txt, theme):
+    def _to_html(cls, txt, theme, palette):
         if not txt:
             return ""
         html = ansiconv.to_html(txt)
-        css = ansiconv.base_css()
-        if theme == "dark":
-            css = cls._get_css(red="#ff8b8b", green="#8bFF8b", blue="#66b3ff")
-        else:
-            css = cls._get_css(
-                background="#FFFFFF",
-                color="#000000",
-                red="#8E0500",
-                green="#19AF22",
-                blue="#00008b",
-                cyan="#17625F",
-            )
-
+        css = cls._get_css(**ANSI_THEMES[palette][theme])
         html = f"""
         <style>{css}</style>
         <pre class="ansi_fore ansi_back">{html}</pre>
@@ -87,7 +124,7 @@ class DocStringViewer(pn.viewable.Viewer):
     ):
         return f"""
     .ansi_fore {{ color: {color}; }}
-    .ansi_back {{ background-color: inherit; padding: 20px; border-radius: 4px; opacity: 0.8 }}
+    .ansi_back {{ background-color: {background}; padding: 20px; height:100%; border-radius: 4px; opacity: 0.8;font: 1rem Inconsolata, monospace; }}
     .ansi1 {{ font-weight: bold; }}
     .ansi3 {{ font-weight: italic; }}
     .ansi4 {{ text-decoration: underline; }}
@@ -109,6 +146,3 @@ class DocStringViewer(pn.viewable.Viewer):
     .ansi46 {{ background-color: {cyan}; }}
     .ansi47 {{ background-color: {color}; }}
     """
-
-
-DocStringViewer()

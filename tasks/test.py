@@ -155,26 +155,6 @@ Running autoflake to remove unused imports on all .py files recursively
     )
 
 
-@task
-def apps(command):
-    """Serves the test apps
-
-    Arguments:
-        command {[type]} -- [description]
-    """
-    print(
-        """
-Serves the test apps
-====================
-"""
-    )
-    files = " ".join(glob.glob("tests/apps/*.py"))
-    command.run(
-        f"panel serve {files} --autoreload",
-        echo=True,
-    )
-
-
 @task(
     pre=[isort, autoflake, black, pylint, mypy, pytest],
     aliases=["pre_commit", "test"],

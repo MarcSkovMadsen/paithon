@@ -19,7 +19,6 @@ def test_classification_plot():
         color=ACCENT_COLOR,
         height=800,
         sizing_mode="stretch_width",
-        background="silver",
     )
     return plot
 

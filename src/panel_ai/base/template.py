@@ -5,7 +5,7 @@ pn.extension(sizing_mode="stretch_width")
 
 ACCENT_COLOR = "#0072B5"
 DEFAULT_PARAMS = {
-    "site": "Panel AI",
+    "site": "🧠 Paithon",
     "accent_base_color": ACCENT_COLOR,
     "header_background": ACCENT_COLOR,
 }

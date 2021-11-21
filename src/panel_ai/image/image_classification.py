@@ -12,6 +12,7 @@ from ..base.classification import ClassificationPlot
 from ..base.component import extract_layout_parameters
 from ..base.svgs import IMAGE_CLASSIFIER_ICON
 from .base.pillow import IMAGE_EXAMPLES, ImageViewer, load_image_from_url
+from ..base.template import ACCENT_COLOR
 
 hv.extension("bokeh")
 
@@ -46,13 +47,13 @@ def dummy_model(image: Image.Image) -> Tuple[Any, Any, List[Dict]]:
 class ImageClassifier(pn.viewable.Viewer):  # pylint: disable=too-many-instance-attributes
     """A widget for classifying images
 
-
-    Inspired by the Hugging Face [ImageClassification](https://huggingface-widgets.netlify.app/)
-    widget
+Inspired by the Hugging Face [ImageClassification](https://huggingface-widgets.netlify.app/)
+widget.
     """
 
     icon = param.String(IMAGE_CLASSIFIER_ICON)
     example = param.Selector(IMAGE_EXAMPLES, label="example")
+    accent_color = param.Color(ACCENT_COLOR)
 
     model = param.Parameter()
 
@@ -84,23 +85,30 @@ class ImageClassifier(pn.viewable.Viewer):  # pylint: disable=too-many-instance-
         self.layout_fileinput = pn.widgets.FileInput(
             accept=".png,.jpg", css_classes=["file-upload"]
         )
-        self.layout_example = pn.Param(self.param.example, expand_button=False, expand=True)[0]
+        if len(IMAGE_EXAMPLES)<=3:
+            widgets={
+                "example": {
+                    "type": pn.widgets.RadioButtonGroup,
+                    "button_type": "success",
+                    "sizing_mode": "fixed"
+                }
+            }
+        else:
+            widgets=None
+        self.layout_example = pn.Param(self.param.example, expand_button=False, expand=False, widgets=widgets)[0]
         self.layout_example.name = "Example"
         self.layout_image = ImageViewer()
-        self.layout_plot = ClassificationPlot()
+        self.layout_plot = ClassificationPlot(color=self.accent_color, name="Plot")
         self.layout_container[:] = [
             f"<h1>{self.icon} Image Classification</h1>",
             self.layout_example,
             self.layout_fileinput,
             self.layout_image,
-            self.layout_plot,
-            self.layout_json,
+            pn.Tabs(self.layout_plot,self.layout_json, dynamic=True)
         ]
 
         if self.image:
             self.param.trigger("image")
-        else:
-            self.image = self.example.image
 
     def __panel__(self):
         return self.layout_container
@@ -138,3 +146,7 @@ class ImageClassifier(pn.viewable.Viewer):  # pylint: disable=too-many-instance-
         if self.layout_fileinput.value:
             stream = BytesIO(self.layout_fileinput.value)
             self.image = Image.open(stream)  # .convert("RGBA")
+
+    @pn.depends("accent_color", watch=True)
+    def _handle_color_change(self):
+        self.plot.color = self.accent_color

@@ -1,7 +1,7 @@
 """Tests of the Panel param extensions"""
 import param
 
-from panel_ai.shared.param import SortedParam
+from paithon.shared.param import SortedParam
 
 
 class _MockClass(param.Parameterized):

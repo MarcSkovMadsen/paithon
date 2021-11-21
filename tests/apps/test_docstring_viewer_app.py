@@ -1,8 +1,8 @@
 """An application for manually testing the docstring viewer."""
 import panel as pn
 
-from panel_ai.base.template import fastlisttemplate
-from panel_ai.shared.pane.doc_string_viewer import DocStringViewer
+from paithon.base.template import fastlisttemplate
+from paithon.shared.pane.doc_string_viewer import DocStringViewer
 
 
 def test_app() -> DocStringViewer:

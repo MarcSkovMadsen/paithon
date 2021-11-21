@@ -1,6 +1,6 @@
 """Test of the classification module"""
-from panel_ai.base.classification import ClassificationPlot
-from panel_ai.image.image_classification import dummy_model
+from paithon.base.classification import ClassificationPlot
+from paithon.image.image_classification import dummy_model
 
 
 def test_classification_plot_constructor_with_no_arguments():

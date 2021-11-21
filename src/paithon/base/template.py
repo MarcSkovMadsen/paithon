@@ -12,7 +12,7 @@ DEFAULT_PARAMS = {
 
 
 def fastlisttemplate(**params):
-    """Returns a Panel-AI version of the FastListTemplate
+    """Returns a Paithon version of the FastListTemplate
 
     Returns:
         [FastListTemplate]: A FastListTemplate

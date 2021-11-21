@@ -1,7 +1,7 @@
 """Test of the component utility functions"""
 import panel as pn
 
-from panel_ai.base.component import get_theme
+from paithon.base.component import get_theme
 
 
 class MockState:  # pylint: disable=too-few-public-methods

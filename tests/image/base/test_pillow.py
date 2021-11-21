@@ -1,7 +1,7 @@
 """Test of the pillow module"""
 import PIL
 
-from panel_ai.image.base.pillow import ImageViewer, image_from_data_uri, image_to_data_uri
+from paithon.image.base.pillow import ImageViewer, image_from_data_uri, image_to_data_uri
 
 
 def test_image_viewer_construction_without_image():

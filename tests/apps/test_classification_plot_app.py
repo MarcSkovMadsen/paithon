@@ -5,10 +5,10 @@
 """
 import panel as pn
 
-from panel_ai.base.classification import ClassificationPlot
-from panel_ai.base.template import ACCENT_COLOR, fastlisttemplate
-from panel_ai.image.image_classification import dummy_model
-from panel_ai.shared.pane.doc_string_viewer import DocStringViewer
+from paithon.base.classification import ClassificationPlot
+from paithon.base.template import ACCENT_COLOR, fastlisttemplate
+from paithon.image.image_classification import dummy_model
+from paithon.shared.pane.doc_string_viewer import DocStringViewer
 
 
 def test_classification_plot():

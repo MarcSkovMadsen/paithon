@@ -8,8 +8,8 @@ Verify
 """
 import panel as pn
 
-from panel_ai.base.template import fastlisttemplate
-from panel_ai.image.base.pillow import ImageViewer
+from paithon.base.template import fastlisttemplate
+from paithon.image.base.pillow import ImageViewer
 from tests.image.conftest import get_image
 
 

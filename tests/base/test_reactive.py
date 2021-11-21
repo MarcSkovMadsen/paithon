@@ -3,7 +3,7 @@ import pathlib
 
 import pytest
 
-from panel_ai.base.reactive import _clean_script, read_scripts, text_to_scripts
+from paithon.base.reactive import _clean_script, read_scripts, text_to_scripts
 
 EXAMPLE_SCRIPTS = [
     (  # Reference Example

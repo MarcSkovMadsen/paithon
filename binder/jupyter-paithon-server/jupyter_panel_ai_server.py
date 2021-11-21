@@ -4,7 +4,7 @@ Function to configure serving the panel example apps via jupyter-server-proxy.
 import pathlib
 from glob import glob
 
-ICON_PATH = str((pathlib.Path(__file__).parent / "panel-ai-apps-icon.svg").absolute())
+ICON_PATH = str((pathlib.Path(__file__).parent / "paithon-apps-icon.svg").absolute())
 
 
 def panel_serve_examples():

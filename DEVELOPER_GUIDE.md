@@ -7,8 +7,8 @@
 ## Installation
 
 ```bash
-git clone https://github.com/marcskovmadsen/panel-ai
-cd panel-ai
+git clone https://github.com/marcskovmadsen/paithon
+cd paithon
 ```
 
 Create your virtual environment.
@@ -23,7 +23,7 @@ Activate your virtual environment. On Windows with Git Bash it can be done via
 source .venv/Scripts/activate
 ```
 
-Install the `panel-ai` package for editing
+Install the `paithon` package for editing
 
 ```bash
 pip install -e .[all]
@@ -70,7 +70,7 @@ Pylint looks for programming errors, helps enforcing a coding standard,
 sniffs for code smells and offers simple refactoring suggestions.
 =======================================================================
 
-pylint setup.py tasks panel_ai tests
+pylint setup.py tasks paithon tests
 
 --------------------------------------------------------------------
 Your code has been rated at 10.00/10 (previous run: 10.00/10, +0.00)
@@ -79,17 +79,17 @@ Your code has been rated at 10.00/10 (previous run: 10.00/10, +0.00)
 Running mypy for identifying python type errors
 ===============================================
 
-mypy setup.py tasks panel_ai tests
+mypy setup.py tasks paithon tests
 Success: no issues found in 16 source files
 
 Running pytest the test framework
 =================================
 
-pytest tests --doctest-modules --cov=panel_ai -m "not functionaltest a
+pytest tests --doctest-modules --cov=paithon -m "not functionaltest a
 nd not integrationtest" --cov-report html:test_results/cov_html
 ============================= test session starts =============================
 platform win32 -- Python 3.8.4, pytest-6.2.2, py-1.10.0, pluggy-0.13.1
-rootdir: C:\repos\private\panel-ai, configfile: pytest.ini, testpaths: tests
+rootdir: C:\repos\private\paithon, configfile: pytest.ini, testpaths: tests
 plugins: anyio-2.2.0, cov-2.11.1
 collected 6 items
 

@@ -1,4 +1,4 @@
 pandas
 -e .
--e binder/jupyter-panel-ai-server/.
+-e binder/jupyter-paithon-server/.
 jupyter-server-proxy

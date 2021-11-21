@@ -59,7 +59,7 @@ extras_require = {
 extras_require["all"] = sorted(set(sum(extras_require.values(), [])))
 
 setuptools.setup(
-    name="panel-ai",
+    name="paithon",
     version=VERSION,
     description="""Easy to use component and examples for your ai workflows.""",
     long_description=long_description,
@@ -68,9 +68,9 @@ setuptools.setup(
     author_email="marc.skov.madsen@gmail.com",
     platforms=["Windows", "Mac OS X", "Linux"],
     license="MIT",
-    url="https://github.com/MarcSkovMadsen/panel-ai",
+    url="https://github.com/MarcSkovMadsen/paithon",
     # My Project contains more folders/ packages but they should not be included
-    packages=setuptools.find_packages(include=["src/panel_ai", "src/panel_ai.*"]),
+    packages=setuptools.find_packages(include=["src/paithon", "src/paithon.*"]),
     include_package_data=True,
     classifiers=[
         # I would like to indicate that this package is a package for the Panel framework

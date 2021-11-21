@@ -78,7 +78,7 @@ Running pytest the test framework
 """
     )
     # Build the command_string
-    command_string = f"pytest {test_files} --doctest-modules --cov=src/panel_ai"
+    command_string = f"pytest {test_files} --doctest-modules --cov=src/paithon"
     if not integrationtest:
         command_string += ' -m "not functionaltest and not integrationtest"'
     if test_results:
@@ -94,7 +94,7 @@ Running pytest the test framework
 
 
 @task()
-def pylint(command, files="setup.py tasks src/panel_ai tests"):
+def pylint(command, files="setup.py tasks src/paithon tests"):
     """Runs pylint (linter) on all .py files recursively to identify coding errors
 
     Arguments:
@@ -117,7 +117,7 @@ sniffs for code smells and offers simple refactoring suggestions.
 
 
 @task
-def mypy(command, files="setup.py tasks src/panel_ai tests"):
+def mypy(command, files="setup.py tasks src/paithon tests"):
     """Runs mypy (static type checker) on all .py files recursively
 
     Arguments:

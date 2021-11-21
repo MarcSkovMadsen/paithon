@@ -1,6 +1,6 @@
 """Test of the image_classification module"""
-from panel_ai.image.base.pillow import IMAGE_EXAMPLES
-from panel_ai.image.image_classification import ImageClassifier, dummy_model
+from paithon.image.base.pillow import IMAGE_EXAMPLES
+from paithon.image.image_classification import ImageClassifier, dummy_model
 
 
 def test_image_classifier_constructor_no_args():

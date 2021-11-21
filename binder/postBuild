@@ -1,5 +1,5 @@
 jupyter serverextension enable panel.io.jupyter_server_extension
-panel build panel_ai
+panel build paithon
 conda install -c conda-forge jupyter_contrib_nbextensions
 jupyter nbextension enable codefolding/main
 jupyter nbextension enable collapsible_headings/main

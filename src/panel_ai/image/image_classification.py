@@ -12,7 +12,8 @@ from ..base.classification import ClassificationPlot
 from ..base.component import extract_layout_parameters
 from ..base.svgs import IMAGE_CLASSIFIER_ICON
 from ..base.template import ACCENT_COLOR
-from .base.pillow import IMAGE_EXAMPLES, ImageViewer, load_image_from_url
+from .base.pillow import IMAGE_EXAMPLES, load_image_from_url
+from .widgets.image_input import ImageInput
 
 hv.extension("bokeh")
 
@@ -82,9 +83,7 @@ class ImageClassifier(pn.viewable.Viewer):  # pylint: disable=too-many-instance-
             name="Json Output",
             sizing_mode="stretch_width",
         )
-        self.layout_fileinput = pn.widgets.FileInput(
-            accept=".png,.jpg", css_classes=["file-upload"]
-        )
+        self.layout_image_input = ImageInput(height=300)
         if len(IMAGE_EXAMPLES) <= 3:
             widgets = {
                 "example": {
@@ -99,13 +98,11 @@ class ImageClassifier(pn.viewable.Viewer):  # pylint: disable=too-many-instance-
             self.param.example, expand_button=False, expand=False, widgets=widgets
         )[0]
         self.layout_example.name = "Example"
-        self.layout_image = ImageViewer()
         self.layout_plot = ClassificationPlot(color=self.accent_color, name="Plot")
         self.layout_container[:] = [
             f"<h1>{self.icon} Image Classification</h1>",
             self.layout_example,
-            self.layout_fileinput,
-            self.layout_image,
+            self.layout_image_input,
             pn.Tabs(self.layout_plot, self.layout_json, dynamic=True),
         ]
 
@@ -125,7 +122,7 @@ class ImageClassifier(pn.viewable.Viewer):  # pylint: disable=too-many-instance-
 
     @param.depends("image", watch=True)
     def _update_image(self):
-        self.layout_image.image = self.image
+        self.layout_image_input.set_value_from_pillow_image(self.image)
 
     @param.depends("image", watch=True)
     def _run_model(self):

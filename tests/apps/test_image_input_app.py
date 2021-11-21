@@ -11,7 +11,7 @@ from panel_ai.shared.param import SortedParam
 def test_app() -> ImageInput:
     """Returns an example ImageInput app for testing purposes."""
     data_url = IMAGE_EXAMPLES[0].data_url
-    image_input = ImageInput(min_height=600, sizing_mode="stretch_both")
+    image_input = ImageInput(width=200, height=200, min_height=600, sizing_mode="stretch_both")
     image_input.set_value_from_data_uri(data_url)
     return image_input
 
@@ -54,6 +54,12 @@ if __name__.startswith("bokeh"):
             "visible",
             "loading",
         ],
+        widgets={
+            "accept": {"height": 120},
+            "height": {"start": 0, "end": 2000},
+            "max_size_in_mega_bytes": {"start": 1, "end": 15},
+            "width": {"start": 0, "end": 3000},
+        },
     )
 
     fastlisttemplate(

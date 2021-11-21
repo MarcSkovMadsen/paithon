@@ -1,7 +1,7 @@
 """Test of the pillow module"""
 import PIL
 
-from panel_ai.image.base.pillow import ImageViewer, image_from_data_uri, image_to_data_url
+from panel_ai.image.base.pillow import ImageViewer, image_from_data_uri, image_to_data_uri
 
 
 def test_image_viewer_construction_without_image():
@@ -31,9 +31,9 @@ def test_load_image_from_datauri():
     # Given
     image = PIL.Image.new(mode="RGBA", size=(1920, 1080), color="pink")
     image.format = "png"
-    uri = image_to_data_url(image)
+    uri = image_to_data_uri(image)
     # When
     result = image_from_data_uri(uri)
     # Then
     assert isinstance(result, PIL.Image.Image)
-    assert image_to_data_url(result) == uri
+    assert image_to_data_uri(result) == uri

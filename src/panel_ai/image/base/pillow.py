@@ -50,14 +50,14 @@ def image_to_base64_string(img: PIL.Image.Image) -> str:
     return base64.b64encode(buffered.getvalue()).decode("utf-8")
 
 
-def image_to_data_url(img: PIL.Image.Image) -> str:
-    """Returns a base64 encoded data url for use as the src attribute of an img tag
+def image_to_data_uri(img: PIL.Image.Image) -> str:
+    """Returns a base64 encoded data uri for use as the src attribute of an img tag
 
     Args:
         img (PIL.Image.Image): The PIL Image to convert
 
     Returns:
-        str: A base64 encoded data url
+        str: A base64 encoded data uri
     """
     img_format = img.format.lower()
     return f"data:image/{img_format};base64," + image_to_base64_string(img)
@@ -91,7 +91,7 @@ class ImageExample(param.Parameterized):
         Returns:
             String: a data_url
         """
-        return image_to_data_url(self.image)
+        return image_to_data_uri(self.image)
 
 
 IMAGE_EXAMPLES = [
@@ -140,6 +140,6 @@ class ImageViewer(pn.reactive.ReactiveHTML):
     def _update_data_url(self):
         with param.edit_constant(self):
             if self.image:
-                self.data_url = image_to_data_url(self.image)
+                self.data_url = image_to_data_uri(self.image)
             else:
                 self.data_url = ""

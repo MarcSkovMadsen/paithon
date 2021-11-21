@@ -48,16 +48,6 @@ render=()=>{
     data.mime_type=mime_type
     data.progress=0
   }
-  function showImage(uri){
-    imageRegion.src = uri;
-    msgElement.innerText = ""
-    imageRegion.style.display="inline"
-    msgElement.style.display="none"
-  }
-  if (data.uri){
-    showImage(data.uri)
-  }
-  state.showImage=showImage
   function showMessage(msg){
     imageRegion.src = "";
     dt.uri=""
@@ -68,6 +58,18 @@ render=()=>{
     imageRegion.style.display="none"
     msgElement.style.display="inline"
   }
+  function showImage(uri){
+    if (uri){
+      imageRegion.src = uri;
+      msgElement.innerText = ""
+      imageRegion.style.display="inline"
+      msgElement.style.display="none"
+    } else {
+      showMessage("<em>Drag & Drop</em> images or <em>click</em> to upload")
+    }
+  }
+  showImage(data.uri)
+  state.showImage=showImage
   function validateImage(image) {
     // check the type
     var validTypes = Array.from(dt.accept, (x)=>{return "image/"+x});
@@ -103,4 +105,8 @@ fit=()=>{
 }
 accept=()=>{
   state.fakeInput.accept = Array.from(data.accept, (x)=>{return "."+x}).toString();
+}
+uri=()=>{
+  console.log(data.uri)
+  state.showImage(data.uri)
 }

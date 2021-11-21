@@ -7,7 +7,7 @@ import PIL
 
 from ...base.component import get_theme
 from ...base.reactive import read_scripts
-from ..base.pillow import image_from_data_uri
+from ..base.pillow import image_from_data_uri, image_to_data_uri
 
 
 class ImageInput(pn.reactive.ReactiveHTML):
@@ -16,7 +16,20 @@ class ImageInput(pn.reactive.ReactiveHTML):
     - Viewing the image in the input
     - Setting an image from the server side"""
 
-    value = param.Parameter(constant=True, precedence=-1)
+    value = param.Parameter(
+        constant=True,
+        precedence=-1,
+        doc="""The base64-enconded contents of \
+the file or files that were loaded.
+
+If `multiple` is set to False (default), this value is a single string with the contents \
+of the single file that was chosen.
+
+If `multiple` is True, this value is a list of strings, each containing the contents of \
+one of the multiple files that were chosen.
+
+The sequence of files is given by the list of filenames (see below).""",
+    )
     filename = param.String(
         constant=True,
         doc="""
@@ -153,6 +166,15 @@ class ImageInput(pn.reactive.ReactiveHTML):
         """
         with param.edit_constant(self):
             self.uri = data_uri
+
+    def set_value_from_pillow_image(self, image: PIL.Image.Image):
+        """Sets the value
+
+        Args:
+            image (PIL.Image.Image): The Image to set the value from
+        """
+        with param.edit_constant(self):
+            self.uri = image_to_data_uri(image)
 
     def get_pil_image(self) -> PIL.Image.Image:
         """Converts the value/ uri to a PIL.Image.Image"""

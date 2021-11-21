@@ -15,5 +15,5 @@ theme=()=>{
   state.chart.updateOptions({theme: {mode: state.theme()}})
 }
 after_layout=()=>{
-  window.dispatchEvent(new Event('resize'))
+  // window.dispatchEvent(new Event('resize'))
 }

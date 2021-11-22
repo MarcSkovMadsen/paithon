@@ -15,7 +15,7 @@ install_requires = [
     "panel==0.12.4",
     "bokeh==2.4.1",
     "holoviews==1.14.6",
-    "ansicov",
+    "ansiconv",
 ]
 
 _recommended: List[str] = []

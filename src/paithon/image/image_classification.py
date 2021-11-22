@@ -67,10 +67,10 @@ class ImageClassifier(pn.viewable.Viewer):  # pylint: disable=too-many-instance-
 
     plot = param.Parameter()
     layout_example = param.Parameter()
-    layout_fileinput = param.Parameter()
     layout_json = param.Parameter()
-    layout_image = param.Parameter()
+    # layout_image_input = param.ClassSelector(class_=ImageInput)
     layout_container = param.Parameter(constant=True)
+    _updating=param.Boolean()
 
     def __init__(self, **params):
         params, layout_params = extract_layout_parameters(params)
@@ -84,6 +84,13 @@ class ImageClassifier(pn.viewable.Viewer):  # pylint: disable=too-many-instance-
             sizing_mode="stretch_width",
         )
         self.layout_image_input = ImageInput(height=300)
+        @pn.depends(self.layout_image_input.param.value, watch=True)
+        def _update_image_from_upload(value):
+            if self.layout_image_input.value:
+                self._updating=True
+                self.image = self.layout_image_input.get_pil_image()
+                self._updating=False
+
         if len(IMAGE_EXAMPLES) <= 3:
             widgets = {
                 "example": {
@@ -122,7 +129,8 @@ class ImageClassifier(pn.viewable.Viewer):  # pylint: disable=too-many-instance-
 
     @param.depends("image", watch=True)
     def _update_image(self):
-        self.layout_image_input.set_value_from_pillow_image(self.image)
+        if not self._updating:
+            self.layout_image_input.set_value_from_pillow_image(self.image)
 
     @param.depends("image", watch=True)
     def _run_model(self):
@@ -139,12 +147,6 @@ class ImageClassifier(pn.viewable.Viewer):  # pylint: disable=too-many-instance-
     @param.depends("example", watch=True)
     def _update_image_from_example(self):
         self.image = self.example.image
-
-    @pn.depends("layout_fileinput.value", watch=True)
-    def _update_image_from_upload(self):
-        if self.layout_fileinput.value:
-            stream = BytesIO(self.layout_fileinput.value)
-            self.image = Image.open(stream)  # .convert("RGBA")
 
     @pn.depends("accent_color", watch=True)
     def _handle_color_change(self):

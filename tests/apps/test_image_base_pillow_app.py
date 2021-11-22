@@ -9,13 +9,13 @@ Verify
 import panel as pn
 
 from paithon.base.template import fastlisttemplate
-from paithon.image.base.pillow import ImageViewer
-from tests.image.conftest import get_image
+from paithon.image.base.pillow import ImageViewer, IMAGE_EXAMPLES
 
+IMAGE=IMAGE_EXAMPLES[0].image
 
 def test_app():
     """Test of the Pillow ImageViewer"""
-    viewer = ImageViewer(get_image())
+    viewer = ImageViewer(IMAGE)
     return pn.Row(viewer, viewer.controls())
 
 

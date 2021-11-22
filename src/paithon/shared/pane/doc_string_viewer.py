@@ -49,7 +49,8 @@ ANSI_THEMES = {
 
 class DocStringViewer(pn.viewable.Viewer):
     """The DocStringViewer makes viewing the docstring of a Parameterized class easy and
-    beautiful."""
+beautiful.
+"""
 
     object = param.ClassSelector(
         class_=param.Parameterized,

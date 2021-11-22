@@ -80,11 +80,9 @@ render=()=>{
 
     // check the size
     if (image.size > dt.max_size_in_mega_bytes*1000000) {
-      console.log("too big")
       showMessage("File too large. Max is " + String(dt.max_size_in_mega_bytes) + "MB");
       return false;
     }
-    console.log("not too big")
 
     return true;
   }
@@ -107,6 +105,5 @@ accept=()=>{
   state.fakeInput.accept = Array.from(data.accept, (x)=>{return "."+x}).toString();
 }
 uri=()=>{
-  console.log(data.uri)
   state.showImage(data.uri)
 }

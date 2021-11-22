@@ -17,7 +17,7 @@ class ImageInput(pn.reactive.ReactiveHTML):
     - Setting an image from the server side"""
 
     value = param.Parameter(
-        constant=True,
+        # constant=True,
         precedence=-1,
         doc="""The base64-enconded contents of \
 the file or files that were loaded.

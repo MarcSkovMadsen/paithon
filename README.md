@@ -8,7 +8,7 @@
 
 PRE-ALPHA STATE
 
-Visualize, communicate and share your AI Models in no time with `paithon`.
+**Visualize, communicate and share your AI models in no time**.
 
 Easy to use AI components, tools and examples for the Jupyter Notebook, your favorite Editor/ IDE and your next AI App.
 
@@ -20,8 +20,6 @@ Get started in your favorite environment
 | - | - | - |
 | [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/marcskovmadsen/paithon/HEAD?filepath=examples) | [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/marcskovmadsen/paithon/HEAD?urlpath=lab/tree/examples) | [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/marcskovmadsen/paithon/HEAD?urlpath=panel) |
 
-
-
 ## 🏁 Background
 
 I believe that Panel is a very flexible and powerful tool compared to the other python ML app frameworks out there. I believe it can give you and your AI team super powers.
@@ -30,7 +28,7 @@ So I started this project to help you and to learn more about AI.
 
 ## ⚖️ License
 
-The `paithon` python package and repository is open source and free to use (MIT License).
+The `paithon` package and repository is open source and free to use (MIT License).
 
 ## 🏃 Getting Started
 
@@ -73,8 +71,9 @@ I find inspiration at
 
 When I get the time I would like to
 
-- Show that Panel can do exactly the same as Gradio and much, much more.
+- Support common workflows in ML and DL.
 - Implement Panel versions of the Hugging Face widgets
+- Show that Panel can easily do what Gradio can and so much more.
 - Add badges for 100% test coverage etc.
 - Distribute as conda package
 

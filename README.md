@@ -51,13 +51,13 @@ pn.extension()
 
 | Guide | Notebook | Jupyter Notebook | Jupyter Labs | Panel App |
 | - | - | - | - | - |
-| DocStringViewer | [View](https://github.com/MarcSkovMadsen/paithon/blob/main/examples/reference/shared/pane/DocStringViewer.ipynb) | [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/marcskovmadsen/paithon/HEAD?filepath=examples/reference/shared/pane/DocStringViewer.ipynb) | [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/marcskovmadsen/paithon/HEAD?urlpath=lab/tree/examples/reference/shared/pane/DocStringViewer.ipynb) | [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/marcskovmadsen/paithon/HEAD?urlpath=panel/DocStringViewer) |
+| DocStringViewer | [View](https://github.com/MarcSkovMadsen/paithon/blob/master/examples/reference/shared/pane/DocStringViewer.ipynb) | [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/marcskovmadsen/paithon/HEAD?filepath=examples/reference/shared/pane/DocStringViewer.ipynb) | [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/marcskovmadsen/paithon/HEAD?urlpath=lab/tree/examples/reference/shared/pane/DocStringViewer.ipynb) | [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/marcskovmadsen/paithon/HEAD?urlpath=panel/DocStringViewer) |
 
 ### 🎨 Gallery
 
 | Guide | Notebook | Jupyter Notebook | Jupyter Labs | App | App
 | - | - | - | - |- | - |
-| AddSeriesDynamically | [View](https://github.com/MarcSkovMadsen/paithon/blob/main/examples/reference/shared/pane/AddSeriesDynamically.ipynb) | [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/marcskovmadsen/paithon/HEAD?filepath=examples/reference/shared/pane/AddSeriesDynamically.ipynb) | [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/marcskovmadsen/paithon/HEAD?urlpath=lab/tree/examples/reference/shared/pane/AddSeriesDynamically.ipynb) | [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/marcskovmadsen/paithon/HEAD?urlpath=panel/AddSeriesDynamically) | |
+| AddSeriesDynamically | [View](https://github.com/MarcSkovMadsen/paithon/blob/master/examples/reference/shared/pane/AddSeriesDynamically.ipynb) | [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/marcskovmadsen/paithon/HEAD?filepath=examples/reference/shared/pane/AddSeriesDynamically.ipynb) | [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/marcskovmadsen/paithon/HEAD?urlpath=lab/tree/examples/reference/shared/pane/AddSeriesDynamically.ipynb) | [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/marcskovmadsen/paithon/HEAD?urlpath=panel/AddSeriesDynamically) | |
 
 ## 💡 Inspiration
 

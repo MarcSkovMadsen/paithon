@@ -1,11 +1,11 @@
 """An application for manually testing the ImageInput"""
 import panel as pn
 
-from paithon.base.template import fastlisttemplate
 from paithon.image.base.pillow import IMAGE_EXAMPLES
 from paithon.image.widgets.image_input import ImageInput
 from paithon.shared.pane.doc_string_viewer import DocStringViewer
 from paithon.shared.param import SortedParam
+from paithon.shared.template import fastlisttemplate
 
 
 def test_app() -> ImageInput:

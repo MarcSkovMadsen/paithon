@@ -21,7 +21,7 @@ def panel_serve_examples():
         "command": [
             "panel",
             "serve",
-            *glob("examples/*.ipynb"),
+            *glob("examples/*.ipynb", recursive=True),
             "--allow-websocket-origin=*",
             "--port",
             "{port}",

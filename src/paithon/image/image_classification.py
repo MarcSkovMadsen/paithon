@@ -1,6 +1,5 @@
 """A Module of tools for Image Classification"""
 import random
-from io import BytesIO
 from typing import Any, Dict, List, Tuple
 
 import holoviews as hv
@@ -11,7 +10,7 @@ from PIL import Image
 from ..base.classification import ClassificationPlot
 from ..base.component import extract_layout_parameters
 from ..base.svgs import IMAGE_CLASSIFIER_ICON
-from ..base.template import ACCENT_COLOR
+from ..shared.template import ACCENT_COLOR
 from .base.pillow import IMAGE_EXAMPLES, load_image_from_url
 from .widgets.image_input import ImageInput
 
@@ -70,7 +69,7 @@ class ImageClassifier(pn.viewable.Viewer):  # pylint: disable=too-many-instance-
     layout_json = param.Parameter()
     # layout_image_input = param.ClassSelector(class_=ImageInput)
     layout_container = param.Parameter(constant=True)
-    _updating=param.Boolean()
+    _updating = param.Boolean()
 
     def __init__(self, **params):
         params, layout_params = extract_layout_parameters(params)
@@ -84,12 +83,13 @@ class ImageClassifier(pn.viewable.Viewer):  # pylint: disable=too-many-instance-
             sizing_mode="stretch_width",
         )
         self.layout_image_input = ImageInput(height=300)
+
         @pn.depends(self.layout_image_input.param.value, watch=True)
         def _update_image_from_upload(value):
-            if self.layout_image_input.value:
-                self._updating=True
+            if value:
+                self._updating = True
                 self.image = self.layout_image_input.get_pil_image()
-                self._updating=False
+                self._updating = False
 
         if len(IMAGE_EXAMPLES) <= 3:
             widgets = {

@@ -8,10 +8,11 @@ Verify
 """
 import panel as pn
 
-from paithon.base.template import fastlisttemplate
-from paithon.image.base.pillow import ImageViewer, IMAGE_EXAMPLES
+from paithon.image.base.pillow import IMAGE_EXAMPLES, ImageViewer
+from paithon.shared.template import fastlisttemplate
 
-IMAGE=IMAGE_EXAMPLES[0].image
+IMAGE = IMAGE_EXAMPLES[0].image
+
 
 def test_app():
     """Test of the Pillow ImageViewer"""

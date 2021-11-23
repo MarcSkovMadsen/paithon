@@ -3,9 +3,9 @@
 """
 import panel as pn
 
-from paithon.base.template import fastlisttemplate
 from paithon.image.image_classification import IMAGE_EXAMPLES, ImageClassifier, dummy_model
 from paithon.shared.pane.doc_string_viewer import DocStringViewer
+from paithon.shared.template import fastlisttemplate
 
 
 def test_app():

@@ -49,8 +49,7 @@ ANSI_THEMES = {
 
 class DocStringViewer(pn.viewable.Viewer):
     """The DocStringViewer makes viewing the docstring of a Parameterized class easy and
-beautiful.
-"""
+    beautiful."""
 
     object = param.ClassSelector(
         class_=param.Parameterized,
@@ -69,7 +68,7 @@ beautiful.
         default="Tomorrow",
         objects=ANSI_THEMES.keys(),
         doc="""
-    For example `solarized`.
+    For example `Tomorrow` or `Solarized`.
     """,
     )
     _html = param.String(
@@ -132,7 +131,7 @@ beautiful.
     ):
         return f"""
     .ansi_fore {{ color: {color}; }}
-    .ansi_back {{ background-color: {background}; padding: 20px; height:100%; border-radius: 4px; opacity: 0.8;font: 1rem Inconsolata, monospace; }}
+    .ansi_back {{ background-color: {background}; padding: 20px; calc(100% - 60px);; border-radius: 4px; opacity: 0.8;font: 1rem Inconsolata, monospace; }}
     .ansi1 {{ font-weight: bold; }}
     .ansi3 {{ font-weight: italic; }}
     .ansi4 {{ text-decoration: underline; }}

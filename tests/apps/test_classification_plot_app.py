@@ -6,9 +6,9 @@
 import panel as pn
 
 from paithon.base.classification import ClassificationPlot
-from paithon.base.template import ACCENT_COLOR, fastlisttemplate
 from paithon.image.image_classification import dummy_model
 from paithon.shared.pane.doc_string_viewer import DocStringViewer
+from paithon.shared.template import ACCENT_COLOR, fastlisttemplate
 
 
 def test_classification_plot():

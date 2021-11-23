@@ -1,5 +1,5 @@
 """Test of the template module"""
-from paithon.base.template import fastlisttemplate
+from paithon.shared.template import fastlisttemplate
 
 
 def test_fastlisttemplate_constructor():

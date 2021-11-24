@@ -22,10 +22,10 @@ class ImageInput(pn.reactive.ReactiveHTML):
         doc="""The base64-enconded contents of \
 the file or files that were loaded.
 
-If `multiple` is set to False (default), this value is a single string with the contents \
+If `multiple` is set to False (default), this value is a single string with the contents
 of the single file that was chosen.
 
-If `multiple` is True, this value is a list of strings, each containing the contents of \
+If `multiple` is True, this value is a list of strings, each containing the contents of
 one of the multiple files that were chosen.
 
 The sequence of files is given by the list of filenames (see below).""",
@@ -88,7 +88,7 @@ The sequence of files is given by the list of filenames (see below).""",
     uri = param.Parameter(
         constant=True,
         doc="""
-    Private parameter used to transfer the image.
+    Parameter used to transfer the image. Will be renamed to data_uri later.
     """,
     )
 

@@ -8,7 +8,8 @@ Verify
 """
 import panel as pn
 
-from paithon.image.base.pillow import IMAGE_EXAMPLES, ImageViewer
+from paithon.image.base.pillow import ImageViewer
+from paithon.image.examples import IMAGE_EXAMPLES
 from paithon.shared.template import fastlisttemplate
 
 IMAGE = IMAGE_EXAMPLES[0].image

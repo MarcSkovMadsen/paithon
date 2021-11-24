@@ -1,7 +1,7 @@
 """An application for manually testing the ImageInput"""
 import panel as pn
 
-from paithon.image.base.pillow import IMAGE_EXAMPLES
+from paithon.image.examples import IMAGE_EXAMPLES
 from paithon.image.widgets.image_input import ImageInput
 from paithon.shared.pane.doc_string_viewer import DocStringViewer
 from paithon.shared.param import SortedParam
@@ -10,9 +10,9 @@ from paithon.shared.template import fastlisttemplate
 
 def test_app() -> ImageInput:
     """Returns an example ImageInput app for testing purposes."""
-    data_url = IMAGE_EXAMPLES[0].data_url
+    data_uri = IMAGE_EXAMPLES[0].data_uri
     image_input = ImageInput(width=200, height=200, min_height=600, sizing_mode="stretch_both")
-    image_input.set_value_from_data_uri(data_url)
+    image_input.set_value_from_data_uri(data_uri)
     return image_input
 
 

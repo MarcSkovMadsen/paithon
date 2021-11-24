@@ -11,7 +11,7 @@ from ..base.classification import ClassificationPlot
 from ..base.component import extract_layout_parameters
 from ..base.svgs import IMAGE_CLASSIFIER_ICON
 from ..shared.template import ACCENT_COLOR
-from .base.pillow import IMAGE_EXAMPLES, load_image_from_url
+from .examples import IMAGE_EXAMPLES, load_image_from_url
 from .widgets.image_input import ImageInput
 
 hv.extension("bokeh")

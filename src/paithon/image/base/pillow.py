@@ -7,11 +7,10 @@ import panel as pn
 import param
 import PIL
 import requests
-from param.parameterized import String
 
 
 # Currently False. Should be changed to True later
-def load_image_from_url(url: str, verify: bool = False) -> PIL.Image.Image:
+def load_image_from_url(url: str, verify: bool = True) -> PIL.Image.Image:
     """Returns an image from from a url
 
     Args:
@@ -61,53 +60,6 @@ def image_to_data_uri(img: PIL.Image.Image) -> str:
     """
     img_format = img.format.lower()
     return f"data:image/{img_format};base64," + image_to_base64_string(img)
-
-
-class ImageExample(param.Parameterized):
-    """A model of an ImageExample"""
-
-    url = param.String(constant=True)
-
-    def __init__(self, **params):
-        super().__init__(**params)
-
-        self._image = None
-
-    @property
-    def image(self) -> PIL.Image.Image:
-        """Return the PIL Image of the example
-
-        Returns:
-            PIL.Image.Image: A PIL Image
-        """
-        if not self._image and self.url:
-            self._image = load_image_from_url(self.url)
-        return self._image
-
-    @property
-    def data_url(self) -> String:
-        """Returns a data_url from the pillow image
-
-        Returns:
-            String: a data_url
-        """
-        return image_to_data_uri(self.image)
-
-
-IMAGE_EXAMPLES = [
-    ImageExample(
-        url="https://huggingface.co/datasets/mishig/sample_images/resolve/main/tiger.jpg",
-        name="Tiger",
-    ),
-    ImageExample(
-        url="https://huggingface.co/datasets/mishig/sample_images/resolve/main/teapot.jpg",
-        name="Teapot",
-    ),
-    ImageExample(
-        url="https://huggingface.co/datasets/mishig/sample_images/resolve/main/palace.jpg",
-        name="Palace",
-    ),
-]
 
 
 class ImageViewer(pn.reactive.ReactiveHTML):

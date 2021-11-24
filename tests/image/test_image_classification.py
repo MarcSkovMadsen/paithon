@@ -1,5 +1,5 @@
 """Test of the image_classification module"""
-from paithon.image.base.pillow import IMAGE_EXAMPLES
+from paithon.image.examples import IMAGE_EXAMPLES
 from paithon.image.image_classification import ImageClassifier, dummy_model
 
 

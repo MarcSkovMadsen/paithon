@@ -35,7 +35,7 @@ def panel_serve_examples():
         "timeout": 360,
         "launcher_entry": {
             "enabled": True,
-            "title": "Paithon Apps",
+            "title": "Paithon Test Apps",
             "icon_path": ICON_PATH,
         },
     }

@@ -1,4 +1,5 @@
 pandas
 -e .
 -e binder/jupyter-paithon-server/.
+-e binder/jupyter-paithon-test-server/.
 jupyter-server-proxy

@@ -9,7 +9,7 @@ setuptools.setup(
     entry_points={
         "jupyter_serverproxy_servers": [
             # name = packagename:function_name
-            "panel = jupyter_paithon_test_server:panel_serve_examples",
+            "panel_test = jupyter_paithon_test_server:panel_serve_examples",
         ]
     },
     install_requires=["jupyter-server-proxy"],

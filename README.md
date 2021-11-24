@@ -8,23 +8,19 @@
 
 PRE-ALPHA STATE
 
-**Make your AI models interactive in no time**.
+**Make your AI models interactive in no time**. Easy to use examples and components for the Jupyter Notebook, your favorite Editor/ IDE and your next AI App.
 
-Easy to use examples and components for the Jupyter Notebook, your favorite Editor/ IDE and your next AI App.
+*Paithon* is **Panel AI Tools with Humor ON**. Get started now!
 
-*Paithon* is the abbreviation of "Panel AI Tools with Humor ON".
-
-Get started in your favorite environment
-
-| Jupyter Notebook | Jupyter Labs | Panel Apps |
-| - | - | - |
-| [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/marcskovmadsen/paithon/HEAD?filepath=examples) | [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/marcskovmadsen/paithon/HEAD?urlpath=lab/tree/examples) | [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/marcskovmadsen/paithon/HEAD?urlpath=panel) |
+| Jupyter Labs | Panel Apps |
+| - | - |
+| [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/marcskovmadsen/paithon/HEAD?urlpath=lab/tree/examples) | [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/marcskovmadsen/paithon/HEAD?urlpath=panel) |
 
 ## 🏁 Background
 
 I believe that Panel is a very flexible and powerful tool compared to the other python ML app frameworks out there. I believe it can give you and your AI team super powers.
 
-So I started this project to help you and to learn more about AI.
+So I started this project to help you and the Panel framework. As a bonus I will learn more about AI.
 
 ## ⚖️ License
 
@@ -49,16 +45,10 @@ pn.extension()
 
 ### 👩‍🏫 Reference Guides
 
-| Guide | Notebook | Jupyter Notebook | Jupyter Labs | Panel App |
-| - | - | - | - | - |
-| DocStringViewer | [View](https://github.com/MarcSkovMadsen/paithon/blob/master/examples/reference/shared/pane/DocStringViewer.ipynb) | [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/marcskovmadsen/paithon/HEAD?filepath=examples/reference/shared/pane/DocStringViewer.ipynb) | [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/marcskovmadsen/paithon/HEAD?urlpath=lab/tree/examples/reference/shared/pane/DocStringViewer.ipynb) | [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/marcskovmadsen/paithon/HEAD?urlpath=panel/DocStringViewer) |
-| ImageInput | [View](https://github.com/MarcSkovMadsen/paithon/blob/master/examples/reference/image/widgets/ImageInput.ipynb) | [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/marcskovmadsen/paithon/HEAD?filepath=examples/reference/image/widgets/ImageInput.ipynb) | [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/marcskovmadsen/paithon/HEAD?urlpath=lab/tree/examples/reference/image/widgets/ImageInput.ipynb) | [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/marcskovmadsen/paithon/HEAD?urlpath=panel/ImageInput) |
-
-### 🎨 Gallery
-
-| Guide | Notebook | Jupyter Notebook | Jupyter Labs | App | App
-| - | - | - | - |- | - |
-| AddSeriesDynamically | [View](https://github.com/MarcSkovMadsen/paithon/blob/master/examples/reference/shared/pane/AddSeriesDynamically.ipynb) | [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/marcskovmadsen/paithon/HEAD?filepath=examples/reference/shared/pane/AddSeriesDynamically.ipynb) | [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/marcskovmadsen/paithon/HEAD?urlpath=lab/tree/examples/reference/shared/pane/AddSeriesDynamically.ipynb) | [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/marcskovmadsen/paithon/HEAD?urlpath=panel/AddSeriesDynamically) | |
+| Guide | Notebook | Jupyter Labs | Panel Apps |
+| - | - | - | - |
+| DocStringViewer | [View](https://github.com/MarcSkovMadsen/paithon/blob/master/examples/reference/shared/pane/DocStringViewer.ipynb) | [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/marcskovmadsen/paithon/HEAD?urlpath=lab/tree/examples/reference/shared/pane/DocStringViewer.ipynb) | [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/marcskovmadsen/paithon/HEAD?urlpath=panel/DocStringViewer) |
+| ImageInput | [View](https://github.com/MarcSkovMadsen/paithon/blob/master/examples/reference/image/widgets/ImageInput.ipynb) | [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/marcskovmadsen/paithon/HEAD?urlpath=lab/tree/examples/reference/image/widgets/ImageInput.ipynb) | [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/marcskovmadsen/paithon/HEAD?urlpath=panel/ImageInput) |
 
 ## 💡 Inspiration
 

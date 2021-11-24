@@ -12,19 +12,11 @@ PRE-ALPHA STATE
 
 *Paithon* is **Panel AI Tools with Humor ON**. Get started now!
 
-| Jupyter Labs | Panel Apps |
+| Jupyter Labs | Apps |
 | - | - |
 | [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/marcskovmadsen/paithon/HEAD?urlpath=lab/tree/examples) | [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/marcskovmadsen/paithon/HEAD?urlpath=panel) |
 
-## 🏁 Background
-
-I believe that Panel is a very flexible and powerful tool compared to the other python ML app frameworks out there. I believe it can give you and your AI team super powers.
-
-So I started this project to help you and the Panel framework. As a bonus I will learn more about AI.
-
-## ⚖️ License
-
-The `paithon` package and repository is open source and free to use (MIT License).
+![Paithon Tour](assets/videos/paithon-tour.gif)
 
 ## 🏃 Getting Started
 
@@ -45,10 +37,20 @@ pn.extension()
 
 ### 👩‍🏫 Reference Guides
 
-| Guide | Notebook | Jupyter Labs | Panel Apps |
+| Guide | Notebook | Jupyter Labs | Apps |
 | - | - | - | - |
 | DocStringViewer | [View](https://github.com/MarcSkovMadsen/paithon/blob/master/examples/reference/shared/pane/DocStringViewer.ipynb) | [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/marcskovmadsen/paithon/HEAD?urlpath=lab/tree/examples/reference/shared/pane/DocStringViewer.ipynb) | [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/marcskovmadsen/paithon/HEAD?urlpath=panel/DocStringViewer) |
 | ImageInput | [View](https://github.com/MarcSkovMadsen/paithon/blob/master/examples/reference/image/widgets/ImageInput.ipynb) | [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/marcskovmadsen/paithon/HEAD?urlpath=lab/tree/examples/reference/image/widgets/ImageInput.ipynb) | [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/marcskovmadsen/paithon/HEAD?urlpath=panel/ImageInput) |
+
+## 🏁 Background
+
+I believe that Panel is a very flexible and powerful tool compared to the other python ML app frameworks out there. I believe it can give you and your AI team super powers.
+
+So I started this project to help you and the Panel framework. As a bonus I will learn more about AI.
+
+## ⚖️ License
+
+The `paithon` package and repository is open source and free to use (MIT License).
 
 ## 💡 Inspiration
 
@@ -70,5 +72,6 @@ When I get the time I would like to
 
 ## 📰 Change Log
 
+- 0.0.3: Fix some broken links
 - 0.0.2: Add ImageInput and DocStringViewer
 - 0.0.1: First Version

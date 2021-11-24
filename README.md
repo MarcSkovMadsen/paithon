@@ -8,9 +8,9 @@
 
 PRE-ALPHA STATE
 
-**Visualize, communicate and share your AI models in no time**.
+**Make your AI models interactive in no time**.
 
-Easy to use AI components, tools and examples for the Jupyter Notebook, your favorite Editor/ IDE and your next AI App.
+Easy to use examples and components for the Jupyter Notebook, your favorite Editor/ IDE and your next AI App.
 
 *Paithon* is the abbreviation of "Panel AI Tools with Humor ON".
 

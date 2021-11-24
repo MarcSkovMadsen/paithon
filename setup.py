@@ -61,7 +61,7 @@ extras_require["all"] = sorted(set(sum(extras_require.values(), [])))
 setuptools.setup(
     name="paithon",
     version=VERSION,
-    description="""Easy to use component and examples for your ai workflows.""",
+    description="""Explore and share your AI Models in no time.""",
     long_description=long_description,
     long_description_content_type="text/markdown",
     author="Marc Skov Madsen",

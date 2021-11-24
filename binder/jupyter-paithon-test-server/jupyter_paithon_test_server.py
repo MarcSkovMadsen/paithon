@@ -2,9 +2,12 @@
 Function to configure serving the panel example apps via jupyter-server-proxy.
 """
 import pathlib
-ICON_PATH = str((pathlib.Path(__file__).parent / "paithon-apps-icon.svg").absolute())
 
-APPS = [str(path) for path in pathlib.Path('examples').rglob('*.ipynb') if not "checkpoint" in str(path)]
+ICON_PATH = str((pathlib.Path(__file__).parent / "paithon-test-apps-icon.svg").absolute())
+
+APPS = [
+    str(path) for path in pathlib.Path("tests/apps").rglob("*.py") if not "__init__" in str(path)
+]
 
 
 def panel_serve_examples():

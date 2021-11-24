@@ -120,7 +120,7 @@ python setup.py sdist bdist_wheel
 to production
 
 ```bash
-python -m twine uplad dist/*VERSION*
+python -m twine upload dist/*VERSION*
 ```
 
 or to test

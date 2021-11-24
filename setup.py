@@ -70,7 +70,8 @@ setuptools.setup(
     license="MIT",
     url="https://github.com/MarcSkovMadsen/paithon",
     # My Project contains more folders/ packages but they should not be included
-    packages=setuptools.find_packages(include=["src/paithon", "src/paithon.*"]),
+    package_dir={'': 'src'},
+    packages=setuptools.find_packages(include=["paithon", "paithon.*"]),
     include_package_data=True,
     classifiers=[
         # I would like to indicate that this package is a package for the Panel framework

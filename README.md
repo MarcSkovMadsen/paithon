@@ -52,8 +52,7 @@ pn.extension()
 | Guide | Notebook | Jupyter Notebook | Jupyter Labs | Panel App |
 | - | - | - | - | - |
 | DocStringViewer | [View](https://github.com/MarcSkovMadsen/paithon/blob/master/examples/reference/shared/pane/DocStringViewer.ipynb) | [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/marcskovmadsen/paithon/HEAD?filepath=examples/reference/shared/pane/DocStringViewer.ipynb) | [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/marcskovmadsen/paithon/HEAD?urlpath=lab/tree/examples/reference/shared/pane/DocStringViewer.ipynb) | [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/marcskovmadsen/paithon/HEAD?urlpath=panel/DocStringViewer) |
-
-| ImageInput | [View](https://github.com/MarcSkovMadsen/paithon/blob/master/examples/reference/shared/pane/ImageInput.ipynb) | [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/marcskovmadsen/paithon/HEAD?filepath=examples/reference/shared/pane/ImageInput.ipynb) | [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/marcskovmadsen/paithon/HEAD?urlpath=lab/tree/examples/reference/shared/pane/ImageInput.ipynb) | [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/marcskovmadsen/paithon/HEAD?urlpath=panel/ImageInput) |
+| ImageInput | [View](https://github.com/MarcSkovMadsen/paithon/blob/master/examples/reference/image/widgets/ImageInput.ipynb) | [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/marcskovmadsen/paithon/HEAD?filepath=examples/reference/image/widgets/ImageInput.ipynb) | [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/marcskovmadsen/paithon/HEAD?urlpath=lab/tree/examples/reference/image/widgets/ImageInput.ipynb) | [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/marcskovmadsen/paithon/HEAD?urlpath=panel/ImageInput) |
 
 ### 🎨 Gallery
 
@@ -81,4 +80,5 @@ When I get the time I would like to
 
 ## 📰 Change Log
 
+- 0.0.2: Add ImageInput and DocStringViewer
 - 0.0.1: First Version

@@ -40,6 +40,8 @@ _tests = [
 _examples = [
     "notebook",
     "jupyterlab",
+    # "IProgress",
+    "ipywidgets",
     "pandas",
     "transformers",
     "Pillow",
@@ -70,7 +72,7 @@ setuptools.setup(
     license="MIT",
     url="https://github.com/MarcSkovMadsen/paithon",
     # My Project contains more folders/ packages but they should not be included
-    package_dir={'': 'src'},
+    package_dir={"": "src"},
     packages=setuptools.find_packages(include=["paithon", "paithon.*"]),
     include_package_data=True,
     classifiers=[

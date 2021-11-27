@@ -3,7 +3,17 @@ from typing import Dict, Tuple
 
 import panel as pn
 
-LAYOUT_PARAMETERS = {"background", "height", "width", "sizing_mode", "scroll"}
+LAYOUT_PARAMETERS = {
+    "background",
+    "height",
+    "width",
+    "sizing_mode",
+    "scroll",
+    "min_height",
+    "max_height",
+    "min_width",
+    "max_width",
+}
 
 
 def get_theme() -> str:

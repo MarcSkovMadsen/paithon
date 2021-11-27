@@ -64,8 +64,8 @@ I find inspiration at
 
 When I get the time I would like to
 
-- Support common workflows in ML and DL.
-- Implement Panel versions of the Hugging Face widgets
+- Support common input types and tasks in ML and DL.
+  - Implement Panel versions of the Hugging Face widgets
 - Show that Panel can easily do what Gradio can and so much more.
 - Add badges for 100% test coverage etc.
 - Distribute as conda package

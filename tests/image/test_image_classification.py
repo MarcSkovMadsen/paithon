@@ -37,4 +37,5 @@ def test_can_instantiate_with_image_argument():
     # When
     classifier = ImageClassifier(image=image)
     # Then
+    # list(classifier.image.getdata()) == list(image.getdata())
     assert classifier.image == image

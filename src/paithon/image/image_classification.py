@@ -45,13 +45,17 @@ def dummy_model(image: Image.Image) -> Tuple[Any, Any, List[Dict]]:
 
 
 class ImageClassifier(pn.viewable.Viewer):  # pylint: disable=too-many-instance-attributes
-    """A widget for classifying images
+    """A widget for classifying images.
 
     Inspired by the Hugging Face [ImageClassification](https://huggingface-widgets.netlify.app/)
     widget.
     """
 
-    icon = param.String(IMAGE_CLASSIFIER_ICON)
+    icon = param.String(
+        IMAGE_CLASSIFIER_ICON,
+        doc="""
+    An image classifier icon. To be used in the header.""",
+    )
     example = param.Selector(IMAGE_EXAMPLES, label="example")
     accent_color = param.Color(ACCENT_COLOR)
 
@@ -73,6 +77,8 @@ class ImageClassifier(pn.viewable.Viewer):  # pylint: disable=too-many-instance-
 
     def __init__(self, **params):
         params, layout_params = extract_layout_parameters(params)
+        if "min_height" not in layout_params:
+            layout_params["min_height"] = 640
         super().__init__(**params, layout_container=pn.Column(**layout_params))
 
         self.layout_json = pn.pane.JSON(
@@ -114,7 +120,9 @@ class ImageClassifier(pn.viewable.Viewer):  # pylint: disable=too-many-instance-
         ]
 
         if self.image:
+            self._updating=True
             self.param.trigger("image")
+            self._updating=False
 
     def __panel__(self):
         return self.layout_container

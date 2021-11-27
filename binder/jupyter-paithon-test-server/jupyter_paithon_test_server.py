@@ -29,7 +29,7 @@ def panel_serve_examples():
             "--port",
             "{port}",
             "--prefix",
-            "{base_url}panel",
+            "{base_url}panel_test",
         ],
         "absolute_url": True,
         "timeout": 360,

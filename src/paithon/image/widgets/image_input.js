@@ -68,8 +68,8 @@ render=()=>{
       showMessage("<em>Drag & Drop</em> images or <em>click</em> to upload")
     }
   }
-  showImage(data.uri)
   state.showImage=showImage
+  state.showImage(data.uri)
   function validateImage(image) {
     // check the type
     var validTypes = Array.from(dt.accept, (x)=>{return "image/"+x});
@@ -105,5 +105,7 @@ accept=()=>{
   state.fakeInput.accept = Array.from(data.accept, (x)=>{return "."+x}).toString();
 }
 uri=()=>{
-  state.showImage(data.uri)
+  if (state.showImage){
+    state.showImage(data.uri)
+  }
 }

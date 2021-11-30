@@ -3,10 +3,10 @@
 import panel as pn
 import param
 
-from ..base.reactive import read_scripts
-from .component import get_theme
+from ...base.reactive import read_scripts
+from ...base.component import get_theme
 
-ACCENT_COLOR = "#A01346"
+ACCENT_COLOR = "#0072B5"
 
 
 CONFIG = {
@@ -41,13 +41,13 @@ CONFIG = {
 }
 
 
-class ClassificationPlot(pn.reactive.ReactiveHTML):
+class Label(pn.reactive.ReactiveHTML):
     """The ClassificationPlot provides plots of the output of a classification, i.e. the *labels*
     and their *score*."""
 
-    output_json = param.List(
+    object = param.List(
         doc="""
-    The output of the classification"""
+    The output of a classification""", precedence=-1
     )
     color = param.Color(
         ACCENT_COLOR,
@@ -61,12 +61,24 @@ class ClassificationPlot(pn.reactive.ReactiveHTML):
         doc="""
     The theme of the plot. Either 'default' or 'dark'""",
     )
+    top = param.Integer(5, bounds=(1,None), doc="""
+    Displays the top number of elements
+    """)
+
+    label = param.String("ORANGUTAN", constant=True)
+    top_object = param.List(constant=True)
 
     _base_options = param.Dict(CONFIG, constant=True)
+    # <div id="label" style="height:50%;font-size:50px;text-align:center;font-weight:900">${label}</div>
+    _template = """
+    <svg xmlns="http://www.w3.org/2000/svg" height="50%" width="100%" viewBox="0 0 110 50">
+        <text x="50%" y="50%" text-anchor="middle" alignment-baseline="central" dominant-baseline="central" font-size="1em">${label}</text>
+      </svg>
+    <div id="component" style="height:50%;width:100%"><div id="plot"></div></div>
+    """
 
-    _template = """<div id="component" style="height:100%;width:100%"><div id="plot"></div></div>"""
 
-    _scripts = read_scripts("classification.js", __file__)
+    _scripts = read_scripts("label.js", __file__)
 
     __javascript__ = ["https://cdn.jsdelivr.net/npm/apexcharts"]
 
@@ -74,3 +86,17 @@ class ClassificationPlot(pn.reactive.ReactiveHTML):
         params["theme"] = params.get("theme", get_theme())
 
         super().__init__(**params)
+
+    @param.depends("object", watch=True)
+    def _handle_change(self):
+        if not self.object:
+            self.label=""
+            self.top_object = []
+            return
+
+        top_object = sorted(self.object, key=lambda x: -x["score"])
+        if len(top_object)>self.top:
+            top_object=top_object[0:self.top]
+        with param.edit_constant(self):
+            self.label=top_object[0]["label"].upper()
+            self.top_object=top_object

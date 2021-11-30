@@ -7,7 +7,7 @@ import panel as pn
 import param
 from PIL import Image
 
-from ..base.classification import ClassificationPlot
+from ..shared.pane.label import Label
 from ..base.component import extract_layout_parameters
 from ..base.svgs import IMAGE_CLASSIFIER_ICON
 from ..shared.template import ACCENT_COLOR
@@ -111,7 +111,7 @@ class ImageClassifier(pn.viewable.Viewer):  # pylint: disable=too-many-instance-
             self.param.example, expand_button=False, expand=False, widgets=widgets
         )[0]
         self.layout_example.name = "Example"
-        self.layout_plot = ClassificationPlot(color=self.accent_color, name="Plot")
+        self.layout_plot = Label(color=self.accent_color, name="Plot")
         self.layout_container[:] = [
             f"<h1>{self.icon} Image Classification</h1>",
             self.layout_example,
@@ -150,7 +150,7 @@ class ImageClassifier(pn.viewable.Viewer):  # pylint: disable=too-many-instance-
     @param.depends("output_json", watch=True)
     def _update_json(self):
         self.layout_json.object = self.output_json
-        self.layout_plot.output_json = self.output_json
+        self.layout_plot.object = self.output_json
 
     @param.depends("example", watch=True)
     def _update_image_from_example(self):

@@ -47,6 +47,7 @@ _examples = [
     "Pillow",
     "requests",
     "timm",
+    "tensorflow",
 ]
 
 _doc: List[str] = []

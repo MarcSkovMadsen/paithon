@@ -1,11 +1,11 @@
-"""The ClassificationPlot plots the `output_json` of a classification
+"""The ClassificationPlot plots the `object` of a classification
 
 - It automatically determines the `theme` from the query args
 - It allows you to change the color
 """
 import panel as pn
 
-from paithon.base.classification import ClassificationPlot
+from paithon.shared.pane.label import Label
 from paithon.image.image_classification import dummy_model
 from paithon.shared.pane.doc_string_viewer import DocStringViewer
 from paithon.shared.template import ACCENT_COLOR, fastlisttemplate
@@ -14,8 +14,8 @@ from paithon.shared.template import ACCENT_COLOR, fastlisttemplate
 def test_classification_plot():
     """Test of the ClassificationPlot"""
     _, _, output_json = dummy_model(None)
-    plot = ClassificationPlot(
-        output_json=output_json,
+    plot = Label(
+        object=output_json,
         color=ACCENT_COLOR,
         height=800,
         sizing_mode="stretch_width",
@@ -29,7 +29,7 @@ if __name__.startswith("bokeh"):
     run_button = pn.widgets.Button(name="Run Classification", button_type="primary")
 
     def _run_classification(_):
-        classification_plot.output_json = dummy_model(None)[2]
+        classification_plot.object = dummy_model(None)[2]
 
     run_button.on_click(_run_classification)
     card = pn.layout.Card(

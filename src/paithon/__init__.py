@@ -1,1 +1,1 @@
-from .interactive import Interactive
+from .model.interface import Interface

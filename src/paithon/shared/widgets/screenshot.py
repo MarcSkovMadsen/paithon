@@ -32,7 +32,7 @@ class Screenshot(pn.reactive.ReactiveHTML):
     """,
     )
     take = param.Event(
-        label="Screenshot",
+        label="SCREENSHOT",
         doc="""
     If activated a screenshot is taken. Include screenshot.param.take in your app if you would like
     a 'Screenshot' button.

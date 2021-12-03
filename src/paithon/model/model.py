@@ -1,7 +1,11 @@
-from typing import Optional
-import param
+"""The Model is wraps a function as a ParameterizedFunction
+which makes it interactive and easier to interface.
+"""
+from typing import Dict, Optional
 
+import param
 from param import ParamOverrides
+
 
 class Model(param.ParameterizedFunction):
     _non_function_parameters = ["name"]
@@ -29,5 +33,10 @@ class Model(param.ParameterizedFunction):
         return {key: p[key] for key in self._function_parameters}
 
     @property
-    def kwargs(self):
+    def kwargs(self) -> Dict:
+        """Returns the model parameters and current values
+
+        Returns:
+            Dict: A dictionary of model parameters and their values
+        """
         return self._to_params()

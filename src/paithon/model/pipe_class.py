@@ -23,17 +23,18 @@ class BasePipe(param.Parameterized):
         self._handle_loading_changed()
         self._handle_object_changed()
 
-
 class PanelPipe(BasePipe):
-    def __init__(self, object=None):
-        super().__init__(object=object)
+    transform = param.Callable(default=lambda x:x)
+
+    def __init__(self, object=None, **params):
+        super().__init__(object=object, **params)
 
         with param.edit_constant(self):
-            self.output = pn.panel(self.iobject)
+            self.output = pn.panel(self.itransform)
 
     @pn.depends("object")
-    def iobject(self):
-        return self.object
+    def itransform(self):
+        return self.transform(self.object)
 
     def _handle_object_changed(self, *_):
         pass
@@ -80,5 +81,8 @@ def pipe(output, object=None):
 
     if not output:
         return PanelPipe(object=object)
+
+    if callable(output):
+        return PanelPipe(object=object, transform=output)
 
     raise ValueError(f"""Output {output} is not a valid output.""")

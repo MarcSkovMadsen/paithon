@@ -1,6 +1,6 @@
 import panel as pn
-import pytest
 import param
+import pytest
 from paithon.model.pipe_class import PanelPipe, ParameterizedPipe, pipe
 
 
@@ -120,6 +120,30 @@ def test_pipe_no_output():
     # When
     result.object = "world"
     assert result.output._pane.object==result.object
+
+    # When
+    result.loading = True
+    assert result.output._pane.loading == result.loading
+    # Then
+    result.loading = False
+    assert result.output._pane.loading == result.loading
+
+def test_pipe_to_function():
+    # Given
+    output=lambda x: x + " world"
+    object="hello"
+    # When
+    result = pipe(output=output, object=object)
+
+    assert isinstance(result, PanelPipe)
+    assert result.object==object
+    assert isinstance(result.output, pn.param.ParamMethod)
+    assert isinstance(result.output._pane, pn.pane.Markdown)
+    assert result.output._pane.object==result.object + " world"
+
+    # When
+    result.object = "world"
+    assert result.output._pane.object==result.object + " world"
 
     # When
     result.loading = True

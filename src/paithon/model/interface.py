@@ -1,6 +1,5 @@
 import logging
-import time
-from typing import Any, Dict, List, Optional, Union
+from typing import Any, Optional
 
 import panel as pn
 import param
@@ -12,6 +11,7 @@ from .runner import ModelRunner
 from .view import ModelView
 
 logger = logging.getLogger(__name__)
+
 
 class Interface(param.Parameterized):
     """Make your AI `model` interactive by providing
@@ -64,12 +64,23 @@ class Interface(param.Parameterized):
     api = param.ClassSelector(class_=ModelApi)
 
     def __init__(
-        self, model: Model, inputs: Optional[Any] = None, outputs: Optional[Any] = None, auto_submit: bool=True, initial_run: bool=True, **params
+        self,
+        model: Model,
+        inputs: Optional[Any] = None,
+        outputs: Optional[Any] = None,
+        auto_submit: bool = True,
+        initial_run: bool = True,
+        **params,
     ):
         clean_model = self._clean_model(model)
         clean_inputs = self._clean_inputs(inputs, clean_model)
         clean_outputs = self._clean_outputs(outputs)
-        model_runner = ModelRunner(value=clean_model, outputs=clean_outputs, auto_submit=auto_submit, initial_run=initial_run)
+        model_runner = ModelRunner(
+            value=clean_model,
+            outputs=clean_outputs,
+            auto_submit=auto_submit,
+            initial_run=initial_run,
+        )
 
         screenshot = Screenshot(
             height=0,

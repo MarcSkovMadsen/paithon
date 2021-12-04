@@ -1,6 +1,7 @@
 """An application for manually testing the Screenshot widget"""
 import numpy as np
 import panel as pn
+
 from paithon.shared.template import fastlisttemplate
 from paithon.shared.widgets import Screenshot, screenshot
 

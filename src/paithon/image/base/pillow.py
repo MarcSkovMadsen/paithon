@@ -36,14 +36,15 @@ def image_from_data_uri(data_url: str) -> PIL.Image.Image:
     """
     return PIL.Image.open(urllib.request.urlopen(data_url).file)
 
-def numpy_array_from_data_uri(data_uri: str, shape: Tuple[int,int]) -> np.ndarray:
+
+def numpy_array_from_data_uri(data_uri: str, shape: Tuple[int, int]) -> np.ndarray:
     image = image_from_data_uri(data_uri)
-    if image.mode=="RGBA":
+    if image.mode == "RGBA":
         background = PIL.Image.new("RGB", image.size, (255, 255, 255))
         background.paste(image, mask=image.split()[3])
     else:
-        background=image
-    background=background.resize(shape)
+        background = image
+    background = background.resize(shape)
     return np.asarray(background)
 
 

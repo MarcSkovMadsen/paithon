@@ -5,9 +5,9 @@
 """
 import panel as pn
 
-from paithon.shared.pane.label import Label
 from paithon.image.image_classification import dummy_model
 from paithon.shared.pane.doc_string_viewer import DocStringViewer
+from paithon.shared.pane.label import Label
 from paithon.shared.template import ACCENT_COLOR, fastlisttemplate
 
 

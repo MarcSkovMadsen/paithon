@@ -1,9 +1,8 @@
-import gradio as gr
-import tensorflow as tf
-import numpy as np
-import requests
 import time
 
+import gradio as gr
+import requests
+import tensorflow as tf
 
 inception_net = tf.keras.applications.InceptionV3() # load the model
 
@@ -23,10 +22,12 @@ def classify_image(inp):
     return bla
 
 import panel as pn
-from paithon.image.widgets import ImageInput
+
 from paithon.image.base.pillow import numpy_array_from_data_uri
+from paithon.image.widgets import ImageInput
 from paithon.shared.pane import Label
 from paithon.shared.widgets import Screenshot
+
 pn.extension(sizing_mode="stretch_width")
 image_input = ImageInput(height=800)
 

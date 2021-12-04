@@ -3,8 +3,8 @@
 import panel as pn
 import param
 
-from ...base.reactive import read_scripts
 from ...base.component import get_theme
+from ...base.reactive import read_scripts
 
 ACCENT_COLOR = "#0072B5"
 
@@ -47,7 +47,8 @@ class Label(pn.reactive.ReactiveHTML):
 
     object = param.List(
         doc="""
-    The output of a classification""", precedence=-1
+    The output of a classification""",
+        precedence=-1,
     )
     color = param.Color(
         ACCENT_COLOR,
@@ -61,9 +62,13 @@ class Label(pn.reactive.ReactiveHTML):
         doc="""
     The theme of the plot. Either 'default' or 'dark'""",
     )
-    top = param.Integer(5, bounds=(1,None), doc="""
+    top = param.Integer(
+        5,
+        bounds=(1, None),
+        doc="""
     Displays the top number of elements
-    """)
+    """,
+    )
 
     label = param.String("ORANGUTAN", constant=True)
     top_object = param.List(constant=True)
@@ -77,7 +82,6 @@ class Label(pn.reactive.ReactiveHTML):
     <div id="component" style="height:50%;width:100%"><div id="plot"></div></div>
     """
 
-
     _scripts = read_scripts("label.js", __file__)
 
     __javascript__ = ["https://cdn.jsdelivr.net/npm/apexcharts"]
@@ -90,13 +94,13 @@ class Label(pn.reactive.ReactiveHTML):
     @param.depends("object", watch=True)
     def _handle_change(self):
         if not self.object:
-            self.label=""
+            self.label = ""
             self.top_object = []
             return
 
         top_object = sorted(self.object, key=lambda x: -x["score"])
-        if len(top_object)>self.top:
-            top_object=top_object[0:self.top]
+        if len(top_object) > self.top:
+            top_object = top_object[0 : self.top]
         with param.edit_constant(self):
-            self.label=top_object[0]["label"].upper()
-            self.top_object=top_object
+            self.label = top_object[0]["label"].upper()
+            self.top_object = top_object

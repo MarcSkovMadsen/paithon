@@ -2,6 +2,7 @@
 import panel as pn
 import param
 import pytest
+
 from paithon.model.interface import Model, ModelRunner
 
 
@@ -54,7 +55,8 @@ def clean_outputs():
     """The expected clean outputs from outputs"""
     return [pn.pane.Str()]
 
+
 @pytest.fixture
 def model_runner(clean_model):
     """The expected modelrunner from clean_model"""
-    return  ModelRunner(value=clean_model)
+    return ModelRunner(value=clean_model)

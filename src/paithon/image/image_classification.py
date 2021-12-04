@@ -7,9 +7,9 @@ import panel as pn
 import param
 from PIL import Image
 
-from ..shared.pane.label import Label
 from ..base.component import extract_layout_parameters
 from ..base.svgs import IMAGE_CLASSIFIER_ICON
+from ..shared.pane.label import Label
 from ..shared.template import ACCENT_COLOR
 from .examples import IMAGE_EXAMPLES, load_image_from_url
 from .widgets.image_input import ImageInput
@@ -120,9 +120,9 @@ class ImageClassifier(pn.viewable.Viewer):  # pylint: disable=too-many-instance-
         ]
 
         if self.image:
-            self._updating=True
+            self._updating = True
             self.param.trigger("image")
-            self._updating=False
+            self._updating = False
 
     def __panel__(self):
         return self.layout_container

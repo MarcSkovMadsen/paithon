@@ -1,9 +1,10 @@
 import panel as pn
 import param
 import pytest
-from paithon import Interface
-from paithon.model.interface import ModelApi, ModelView, Model
 from conftest import ImageClassificationModel
+
+from paithon import Interface
+from paithon.model.interface import Model, ModelApi, ModelView
 
 
 def test_empty_constructor():
@@ -127,12 +128,15 @@ def test_model(args, kwargs, expected):
 
 
 def test_app():
-    interactive = Interface(model=ImageClassificationModel, outputs=[pn.pane.Str], auto_submit=False, initial_run=True)
+    interactive = Interface(
+        model=ImageClassificationModel, outputs=[pn.pane.Str], auto_submit=False, initial_run=True
+    )
     return interactive
 
 
 if __name__.startswith("bokeh"):
     import logging
+
     logging.basicConfig(level=logging.DEBUG)
     pn.extension(sizing_mode="stretch_width")
     test_app().view.servable()

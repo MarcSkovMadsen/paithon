@@ -3,8 +3,8 @@ import logging
 import time
 from typing import List, Optional
 
-import param
 import panel as pn
+import param
 
 from .model import Model
 
@@ -13,12 +13,22 @@ logger = logging.getLogger(__name__)
 
 class ModelStats(param.Parameterized):
     """Contains statistics for the number of runs of a Model, the average duration etc."""
-    runs = param.Integer(constant=True, doc="""The number of runs
-    """)
-    duration_total = param.Number(constant=True, doc="""
-    The total duration in seconds""")
-    duration_avg = param.Number(constant=True, doc="""
-    The average duration of a run in seconds""")
+
+    runs = param.Integer(
+        constant=True,
+        doc="""The number of runs
+    """,
+    )
+    duration_total = param.Number(
+        constant=True,
+        doc="""
+    The total duration in seconds""",
+    )
+    duration_avg = param.Number(
+        constant=True,
+        doc="""
+    The average duration of a run in seconds""",
+    )
 
     def update(self, duration: float):
         """Use this function to update the stats
@@ -40,32 +50,63 @@ class ModelStats(param.Parameterized):
         """Resets the stats to zero"""
         self.runs = self.duration_total = self.duration_avg = 0
 
+
 class ModelRunner(param.Parameterized):
-    value = param.ClassSelector(class_=Model, constant=True, doc="""
-    The model to run""")
-    stats = param.ClassSelector(class_=ModelStats, constant=True, doc="""
-    Holds the stats like number of runs""")
+    value = param.ClassSelector(
+        class_=Model,
+        constant=True,
+        doc="""
+    The model to run""",
+    )
+    stats = param.ClassSelector(
+        class_=ModelStats,
+        constant=True,
+        doc="""
+    Holds the stats like number of runs""",
+    )
 
-    kwargs = param.Dict(constant=True, doc="""
-    The arguments (parameter: value) of the last run""")
-    result = param.Parameter(constant=True, doc="""
-    The result of the last run""")
+    kwargs = param.Dict(
+        constant=True,
+        doc="""
+    The arguments (parameter: value) of the last run""",
+    )
+    result = param.Parameter(
+        constant=True,
+        doc="""
+    The result of the last run""",
+    )
 
-    run = param.Action(doc="""
-    Method to run the model. You can it with both positional and keyword arguments.""")
+    run = param.Action(
+        doc="""
+    Method to run the model. You can it with both positional and keyword arguments."""
+    )
     active = param.Boolean(doc="""True while the running the model. False otherwise.""")
 
-    submit = param.Event(doc="""Set this to True to submit a run with the current values of the
-    Model.""")
-    auto_submit = param.Boolean(default=True, doc="""If True the model is automatically run when a
-    parameter of the Model changes. If False you need to manually `submit` to run the model""")
+    submit = param.Event(
+        doc="""Set this to True to submit a run with the current values of the
+    Model."""
+    )
+    auto_submit = param.Boolean(
+        default=True,
+        doc="""If True the model is automatically run when a
+    parameter of the Model changes. If False you need to manually `submit` to run the model""",
+    )
 
-    outputs = param.List(constant=True, doc="""
-    A List of panes to pipe the result to""")
+    outputs = param.List(
+        constant=True,
+        doc="""
+    A List of panes to pipe the result to""",
+    )
 
-    def __init__(self, value: Model, auto_submit: bool=True, outputs: Optional[List]=None, initial_run=False):
+    def __init__(
+        self,
+        value: Model,
+        auto_submit: bool = True,
+        outputs: Optional[List] = None,
+        initial_run=False,
+    ):
         if not outputs:
-            outputs=[]
+            outputs = []
         super().__init__(value=value, auto_submit=auto_submit, outputs=outputs, stats=ModelStats())
         self.run = self._run
         self._watchers = self._setup_watchers(initial_run=initial_run)
@@ -126,6 +167,7 @@ class ModelRunner(param.Parameterized):
 
         def _handle_autosubmit_changed(value):
             button.visible = not value
+
         _handle_autosubmit_changed(self.auto_submit)
         pn.bind(_handle_autosubmit_changed, value=self.param.auto_submit)
 

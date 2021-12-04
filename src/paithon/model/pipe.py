@@ -5,8 +5,8 @@ from typing import Any, Callable, List, Tuple, Union
 
 import panel as pn
 import param
-from param.parameterized import output
 from itertools import zip_longest
+from .pipe_class import pipe as _get_pipe
 
 
 def _validate_function(function):
@@ -16,68 +16,12 @@ def _validate_function(function):
         )
 
 
-def _output_error_message(output):
-    return f"""Output {output} is not a valid output. Please provide a Parameterized class
-    or instance with an `object` or `value` parameter. For example a pane, widget or indicator"""
-
-
-def _clean_output(output):
-    if not output:
-        return
-    if type(output) is param.parameterized.ParameterizedMetaclass:
-        output = output()
-    if isinstance(output, param.Parameterized):
-        if "object" in output.param or "value" in output.param:
-            return output
-    raise ValueError(_output_error_message(output))
-
-
-def _clean_outputs(*outputs):
-    if outputs:
-        return tuple(_clean_output(output) for output in outputs)
-    return outputs
-
-class Pipe(param.Parameterized):
-    object = param.Parameter()
-    output = param.Parameter()
-
-    def __init__(self, object=None, output=None):
-        super().__init__(object=object)
-        self.output = self._clean_output(output)
-
-        if not isinstance(self.output, pn.param.ParamMethod):
-            self._update_func = self._get_update_func()
-            self.param.watch(self._update_func, "object")
-            self._update_func()
-
-    def _update_pane(self, *_):
-        self.output.object = self.object
-
-    def _get_update_func(self):
-        if isinstance(self.output, param.Parameterized) and hasattr(self.output, "object"):
-            return self._update_pane
-        raise ValueError(f"Output {output} is not supported")
-
-    def _clean_output(self, output):
-        if not output:
-            return pn.panel(self.iobject)
-        if type(output) is param.parameterized.ParameterizedMetaclass:
-            output = output()
-        if isinstance(output, param.Parameterized):
-            if "object" in output.param or "value" in output.param:
-                return output
-        raise ValueError(_output_error_message(output))
-
-    @pn.depends("object")
-    def iobject(self):
-        return self.object
-
 def _create_pipes(results, outputs):
     if not isinstance(results, tuple):
         raise ValueError("results is not tuple")
     if not isinstance(outputs, tuple):
         raise ValueError("outputs is not a tuple")
-    return tuple(Pipe(result, output) for result, output in zip_longest(results, outputs))
+    return tuple(_get_pipe(output=output, object=result) for result, output in zip_longest(results, outputs))
 
 
 def pipe(function: Callable, *outputs: param.Parameterized, default_layout=pn.Column) -> Union[Any, Tuple]:

@@ -1,5 +1,4 @@
 import panel as pn
-from param.parameterized import output
 
 from paithon import interactive
 
@@ -60,3 +59,5 @@ def test_alternative_output():
     assert outputs[0].object
     assert outputs[0].object
     return pn.Row(pn.Column(inputs), outputs)
+
+

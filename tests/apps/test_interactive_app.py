@@ -36,6 +36,12 @@ def test_alternative_output():
     )
     return create_layout(inputs, outputs)
 
+def test_fixed_num_outputs():
+    def model(value):
+        return [value for value in range(0,value)]
+    slider = pn.widgets.IntSlider(value=0, start=1, end=10)
+    inputs, outputs = interactive(model,inputs=slider, num_outputs=10)
+    return create_layout(inputs, outputs)
 
 if __name__.startswith("bokeh"):
     pn.extension(sizing_mode="stretch_width")
@@ -44,4 +50,6 @@ if __name__.startswith("bokeh"):
         test_alternative_output(),
         "# Test Multi Output",
         test_multi_output(),
+        "# Fixed Number of Outputs",
+        test_fixed_num_outputs
     ).servable()

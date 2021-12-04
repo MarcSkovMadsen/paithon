@@ -2,7 +2,7 @@
 specific panes.
 """
 from itertools import zip_longest
-from typing import Any, Callable, Tuple, Union
+from typing import Any, Callable, Optional, Tuple, Union
 
 import panel as pn
 
@@ -16,7 +16,22 @@ def _validate_function(function):
         )
 
 
-def _create_pipes(results, outputs):
+def _adjust_results(results: Optional[tuple] = None, num_results: Optional[int] = None):
+    if results is None and num_results is None:
+        return tuple()
+    if num_results is None:
+        return results
+    if not results and num_results:
+        return tuple(None for _ in range(num_results))
+    if len(results) < num_results:
+        empty_results = (None for _ in range(num_results - len(results)))
+        return (*results, *empty_results)
+    if len(results) > num_results:
+        return tuple(results[index] for index in range(num_results))
+    return results
+
+
+def _create_pipes(results: tuple, outputs: tuple):
     if not isinstance(results, tuple):
         raise ValueError("results is not tuple")
     if not isinstance(outputs, tuple):
@@ -32,23 +47,32 @@ def _set_loading(pipes, loading):
             _pipe.loading = loading
 
 
-def _get_results(function, inputs) -> Tuple:
+def _get_results(function, inputs, num_results) -> Tuple:
     args = tuple(getattr(input.owner, input.name) for input in inputs)
     kwargs = dict(zip(function._dinfo["kw"].keys(), args))  # type: ignore[attr-defined] pylint: disable=protected-access
     results = function(**kwargs)
     if not isinstance(results, (list, tuple)):
         results = (results,)
-    return tuple(results)
+    else:
+        results = tuple(results)
+    return _adjust_results(results, num_results)
 
 
 def _set_result(results: tuple, *pipes):
     for index, _pipe in enumerate(pipes):
-        _pipe.object = results[index]
+        try:
+            _pipe.object = results[index]
+        except:
+            _pipe.object = None
         _pipe.loading = False
 
 
 def pipe(
-    function: Callable, *outputs, default_layout=pn.Column, loading_indicator=True
+    function: Callable,
+    *outputs,
+    num_outputs: Optional[int] = None,
+    default_layout=pn.Column,
+    loading_indicator=False
 ) -> Union[Any, Tuple]:
     """Returns an instantiated and bound version of the outputs
 
@@ -72,13 +96,13 @@ def pipe(
 
     inputs = tuple(function._dinfo["kw"].values())  # type: ignore[attr-defined] pylint: disable=protected-access
 
-    results = _get_results(function, inputs)
+    results = _get_results(function, inputs, num_outputs)
     pipes = _create_pipes(results, outputs)
     outputs = tuple(pipe.output for pipe in pipes)
 
     def _handle_change(*_):
         _set_loading(pipes, True and loading_indicator)
-        results = _get_results(function, inputs)
+        results = _get_results(function, inputs, num_results=num_outputs)
         _set_result(results, *pipes)
 
     for _input in inputs:

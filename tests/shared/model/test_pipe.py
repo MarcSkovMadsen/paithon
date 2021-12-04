@@ -3,7 +3,7 @@ import param
 import pytest
 
 from paithon import pipe
-from paithon.model.pipe import _create_pipes, _validate_function
+from paithon.model.pipe import _adjust_results, _create_pipes, _validate_function
 
 
 def single_factor_model(value):
@@ -131,3 +131,37 @@ def test_pipe_multi_output_constructor(itwo_factor_model):
     assert isinstance(outputs, pn.Column)
     outputs = pipe(itwo_factor_model, pn.pane.Str, pn.pane.Str, default_layout=pn.Row)
     assert isinstance(outputs, pn.Row)
+
+
+def test_adjust_results():
+    assert _adjust_results(None, None) == tuple()
+    assert _adjust_results((1,), None) == (1,)
+    assert _adjust_results((1,), 0) == tuple()
+    assert _adjust_results(None, 1) == (None,)
+    assert _adjust_results(None, 2) == (None, None)
+    assert _adjust_results((1,), 1) == (1,)
+    assert _adjust_results((1,), 2) == (1, None)
+    assert _adjust_results((1,), 3) == (1, None, None)
+    assert _adjust_results((1, 2, 3), 2) == (1, 2)
+    assert _adjust_results((1, 2, 3), 1) == (1,)
+    assert _adjust_results((1, 2, 3), 0) == tuple()
+    assert _adjust_results("a", None) == ("a")
+    assert _adjust_results("a", 1) == ("a")
+    assert _adjust_results("a", 2) == ("a", None)
+
+def test_pipe_to_extra_outputs():
+    slider = pn.widgets.FloatSlider(value=0, start=1, end=10)
+    def model(value):
+        return [value for value in range(0,value)]
+    imodel=pn.bind(model, slider)
+    outputs=pipe(imodel, num_outputs=10)
+
+    assert len(outputs)==10
+    assert all(tuple(output._pane.object==None for output in outputs))
+
+    slider.value=10
+    assert all(tuple(output._pane.object==index for index, output in enumerate(outputs)))
+
+    slider.value=9
+    assert all(tuple(output._pane.object==index for index, output in enumerate(outputs[0:9])))
+    assert outputs[9]._pane.object is None

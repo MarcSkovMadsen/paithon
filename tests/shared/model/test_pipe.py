@@ -3,25 +3,31 @@ import param
 import pytest
 
 from paithon import pipe
-from paithon.model.pipe import _validate_function, _create_pipes
+from paithon.model.pipe import _create_pipes, _validate_function
+
 
 def single_factor_model(value):
     return value
 
+
 def two_factor_model(value1, value2):
     return value1, value2
+
 
 @pytest.fixture
 def widget1():
     return pn.widgets.TextInput()
 
+
 @pytest.fixture
 def isingle_factor_model(widget1):
     return pn.bind(single_factor_model, widget1)
 
+
 @pytest.fixture
 def widget2():
     return pn.widgets.TextInput()
+
 
 @pytest.fixture
 def itwo_factor_model(widget1, widget2):
@@ -43,6 +49,7 @@ class CustomValueOutput(param.Parameterized):
 def test_invalid_inputs():
     with pytest.raises(ValueError):
         _validate_function(two_factor_model)
+
 
 def test_constructor():
     input1 = pn.widgets.TextInput()
@@ -103,11 +110,12 @@ def test_pipe_can_infer_outputs():
     input2.value = "World"
     assert output2._pane.object == input2.value
 
+
 def test_pipe_constructor_can_infer():
-    pipes = _create_pipes(('a',),tuple())
-    assert len(pipes)==1
+    pipes = _create_pipes(("a",), tuple())
+    assert len(pipes) == 1
     pipe_ = pipes[0]
-    assert pipe_.object == 'a'
+    assert pipe_.object == "a"
     assert isinstance(pipe_.output, pn.param.ParamMethod)
     assert isinstance(pipe_.output._pane, pn.pane.Markdown)
     assert pipe_.output._pane.object == pipe_.object
@@ -117,9 +125,9 @@ def test_pipe_constructor_can_infer():
     assert isinstance(pipe_.output._pane, pn.pane.JSON)
     assert pipe_.output._pane.object == pipe_.object
 
+
 def test_pipe_multi_output_constructor(itwo_factor_model):
     outputs = pipe(itwo_factor_model, pn.pane.Str, pn.pane.Str)
     assert isinstance(outputs, pn.Column)
     outputs = pipe(itwo_factor_model, pn.pane.Str, pn.pane.Str, default_layout=pn.Row)
     assert isinstance(outputs, pn.Row)
-

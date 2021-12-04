@@ -2,7 +2,7 @@
 specific panes.
 """
 from itertools import zip_longest
-from typing import Any, Callable, List, Tuple, Union
+from typing import Any, Callable, Tuple, Union
 
 import panel as pn
 import param
@@ -22,9 +22,14 @@ def _create_pipes(results, outputs):
         raise ValueError("results is not tuple")
     if not isinstance(outputs, tuple):
         raise ValueError("outputs is not a tuple")
-    return tuple(_get_pipe(output=output, object=result) for result, output in zip_longest(results, outputs))
+    return tuple(
+        _get_pipe(output=output, object=result) for result, output in zip_longest(results, outputs)
+    )
 
-def pipe(function: Callable, *outputs, default_layout=pn.Column, loading_indicator=True) -> Union[Any, Tuple]:
+
+def pipe(
+    function: Callable, *outputs, default_layout=pn.Column, loading_indicator=True
+) -> Union[Any, Tuple]:
     """Returns an instantiated and bound version of the outputs
 
     If no outputs are provided then outputs will be inferred from from the first return value
@@ -51,7 +56,7 @@ def pipe(function: Callable, *outputs, default_layout=pn.Column, loading_indicat
     def _get_results() -> Tuple:
         if pipes:
             for _pipe in pipes:
-                _pipe.loading=True and loading_indicator
+                _pipe.loading = True and loading_indicator
         args = tuple(getattr(input.owner, input.name) for input in inputs)
         kwargs = dict(zip(function._dinfo["kw"].keys(), args))  # type: ignore[attr-defined] pylint: disable=protected-access
         results = function(**kwargs)
@@ -72,12 +77,11 @@ def pipe(function: Callable, *outputs, default_layout=pn.Column, loading_indicat
         results = _get_results()
         _set_result(results, *pipes)
 
-
     for _input in inputs:
         _input.owner.param.watch(_handle_change, parameter_names=[_input.name])
     if len(outputs) == 1:
         return outputs[0]
     if callable(default_layout):
         default_layout = default_layout()
-    default_layout[:]=list(outputs)
+    default_layout[:] = list(outputs)
     return default_layout

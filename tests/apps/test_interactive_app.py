@@ -1,12 +1,15 @@
 import time
 
 import panel as pn
+
 from paithon import interactive
+
 
 def create_layout(inputs, outputs):
     if not isinstance(inputs, tuple):
-        inputs=(inputs,)
+        inputs = (inputs,)
     return pn.Row(pn.Column(*inputs), outputs)
+
 
 def test_multi_output():
     def model(value):

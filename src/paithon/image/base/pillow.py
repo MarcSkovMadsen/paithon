@@ -38,6 +38,15 @@ def image_from_data_uri(data_url: str) -> PIL.Image.Image:
 
 
 def numpy_array_from_data_uri(data_uri: str, shape: Tuple[int, int]) -> np.ndarray:
+    """Returns the data_uri image as a numpy array
+
+    Args:
+        data_uri (str): An image data uri
+        shape (Tuple[int, int]): The shape. For example (299,299)
+
+    Returns:
+        np.ndarray: The image numpy array
+    """
     image = image_from_data_uri(data_uri)
     if image.mode == "RGBA":
         background = PIL.Image.new("RGB", image.size, (255, 255, 255))

@@ -1,5 +1,5 @@
-import param
 import panel as pn
+import param
 
 
 class BasePipe(param.Parameterized):
@@ -23,8 +23,9 @@ class BasePipe(param.Parameterized):
         self._handle_loading_changed()
         self._handle_object_changed()
 
+
 class PanelPipe(BasePipe):
-    transform = param.Callable(default=lambda x:x)
+    transform = param.Callable(default=lambda x: x)
 
     def __init__(self, object=None, **params):
         super().__init__(object=object, **params)
@@ -41,7 +42,7 @@ class PanelPipe(BasePipe):
 
     def _handle_loading_changed(self, *_):
         if self.output:
-            self.output._pane.loading=self.loading
+            self.output._pane.loading = self.loading
 
 
 class ParameterizedPipe(BasePipe):
@@ -50,10 +51,10 @@ class ParameterizedPipe(BasePipe):
 
     def _handle_object_changed(self, *_):
         if self.object is None:
-            self.output.visible=False
+            self.output.visible = False
         else:
             setattr(self.output, self.parameter, self.object)
-            self.output.visible=True
+            self.output.visible = True
 
     def _handle_loading_changed(self, *_):
         self.output.loading = self.loading

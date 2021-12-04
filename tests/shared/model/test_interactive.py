@@ -32,6 +32,7 @@ def test_interactive():
     input2.value = "World"
     output2.object == input1.value
 
+
 def test_multi_output():
     def model(value):
         return {"data": [value]}, f"https://audio.qurancdn.com/wbw/001_001_00{value}.mp3"
@@ -59,5 +60,3 @@ def test_alternative_output():
     assert outputs[0].object
     assert outputs[0].object
     return pn.Row(pn.Column(inputs), outputs)
-
-

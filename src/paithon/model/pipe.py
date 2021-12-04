@@ -5,7 +5,6 @@ from itertools import zip_longest
 from typing import Any, Callable, Tuple, Union
 
 import panel as pn
-import param
 
 from .pipe_class import pipe as _get_pipe
 
@@ -25,6 +24,27 @@ def _create_pipes(results, outputs):
     return tuple(
         _get_pipe(output=output, object=result) for result, output in zip_longest(results, outputs)
     )
+
+
+def _set_loading(pipes, loading):
+    if pipes:
+        for _pipe in pipes:
+            _pipe.loading = loading
+
+
+def _get_results(function, inputs) -> Tuple:
+    args = tuple(getattr(input.owner, input.name) for input in inputs)
+    kwargs = dict(zip(function._dinfo["kw"].keys(), args))  # type: ignore[attr-defined] pylint: disable=protected-access
+    results = function(**kwargs)
+    if not isinstance(results, (list, tuple)):
+        results = (results,)
+    return tuple(results)
+
+
+def _set_result(results: tuple, *pipes):
+    for index, _pipe in enumerate(pipes):
+        _pipe.object = results[index]
+        _pipe.loading = False
 
 
 def pipe(
@@ -51,30 +71,14 @@ def pipe(
     _validate_function(function)
 
     inputs = tuple(function._dinfo["kw"].values())  # type: ignore[attr-defined] pylint: disable=protected-access
-    pipes = None
 
-    def _get_results() -> Tuple:
-        if pipes:
-            for _pipe in pipes:
-                _pipe.loading = True and loading_indicator
-        args = tuple(getattr(input.owner, input.name) for input in inputs)
-        kwargs = dict(zip(function._dinfo["kw"].keys(), args))  # type: ignore[attr-defined] pylint: disable=protected-access
-        results = function(**kwargs)
-        if not isinstance(results, (list, tuple)):
-            results = (results,)
-        return tuple(results)
-
-    def _set_result(results: tuple, *pipes):
-        for index, _pipe in enumerate(pipes):
-            _pipe.object = results[index]
-            _pipe.loading = False
-
-    results = _get_results()
+    results = _get_results(function, inputs)
     pipes = _create_pipes(results, outputs)
     outputs = tuple(pipe.output for pipe in pipes)
 
-    def _handle_change(*events):
-        results = _get_results()
+    def _handle_change(*_):
+        _set_loading(pipes, True and loading_indicator)
+        results = _get_results(function, inputs)
         _set_result(results, *pipes)
 
     for _input in inputs:

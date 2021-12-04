@@ -123,5 +123,3 @@ def test_pipe_multi_output_constructor(itwo_factor_model):
     outputs = pipe(itwo_factor_model, pn.pane.Str, pn.pane.Str, default_layout=pn.Row)
     assert isinstance(outputs, pn.Row)
 
-
-

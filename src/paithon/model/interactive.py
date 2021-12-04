@@ -9,7 +9,7 @@ def _clean_input(input):
     return input
 
 
-def interactive(function, inputs, outputs=None):
+def interactive(function, inputs, outputs=None, loading_indicator=True):
     if isinstance(inputs, dict):
         inputs = {key: _clean_input(input) for key, input in inputs.items()}
         ifunction = pn.bind(function, **inputs)
@@ -24,7 +24,7 @@ def interactive(function, inputs, outputs=None):
         if not isinstance(outputs, (list, tuple)):
             outputs = (outputs,)
 
-        outputs = pipe(ifunction, *outputs)
+        outputs = pipe(ifunction, *outputs, loading_indicator=loading_indicator)
     else:
-        outputs = pipe(ifunction)
+        outputs = pipe(ifunction, loading_indicator=loading_indicator)
     return inputs, outputs

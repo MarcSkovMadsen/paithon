@@ -1,11 +1,12 @@
 """The pipe makes it possible to pipe the output(s) of function bound to parameters or widgets to
 specific panes.
 """
+from itertools import zip_longest
 from typing import Any, Callable, List, Tuple, Union
 
 import panel as pn
 import param
-from itertools import zip_longest
+
 from .pipe_class import pipe as _get_pipe
 
 
@@ -23,8 +24,7 @@ def _create_pipes(results, outputs):
         raise ValueError("outputs is not a tuple")
     return tuple(_get_pipe(output=output, object=result) for result, output in zip_longest(results, outputs))
 
-
-def pipe(function: Callable, *outputs: param.Parameterized, default_layout=pn.Column) -> Union[Any, Tuple]:
+def pipe(function: Callable, *outputs, default_layout=pn.Column, loading_indicator=True) -> Union[Any, Tuple]:
     """Returns an instantiated and bound version of the outputs
 
     If no outputs are provided then outputs will be inferred from from the first return value
@@ -46,8 +46,12 @@ def pipe(function: Callable, *outputs: param.Parameterized, default_layout=pn.Co
     _validate_function(function)
 
     inputs = tuple(function._dinfo["kw"].values())  # type: ignore[attr-defined] pylint: disable=protected-access
+    pipes = None
 
     def _get_results() -> Tuple:
+        if pipes:
+            for _pipe in pipes:
+                _pipe.loading=True and loading_indicator
         args = tuple(getattr(input.owner, input.name) for input in inputs)
         kwargs = dict(zip(function._dinfo["kw"].keys(), args))  # type: ignore[attr-defined] pylint: disable=protected-access
         results = function(**kwargs)
@@ -58,6 +62,7 @@ def pipe(function: Callable, *outputs: param.Parameterized, default_layout=pn.Co
     def _set_result(results: tuple, *pipes):
         for index, _pipe in enumerate(pipes):
             _pipe.object = results[index]
+            _pipe.loading = False
 
     results = _get_results()
     pipes = _create_pipes(results, outputs)
@@ -66,6 +71,7 @@ def pipe(function: Callable, *outputs: param.Parameterized, default_layout=pn.Co
     def _handle_change(*events):
         results = _get_results()
         _set_result(results, *pipes)
+
 
     for _input in inputs:
         _input.owner.param.watch(_handle_change, parameter_names=[_input.name])

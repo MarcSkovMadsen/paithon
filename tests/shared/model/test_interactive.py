@@ -1,4 +1,5 @@
 import panel as pn
+from param.parameterized import output
 
 from paithon import interactive
 
@@ -30,3 +31,33 @@ def test_interactive():
 
     input2.value = "World"
     output2.object == input1.value
+
+def test_multi_output():
+    def model(value):
+        return {"data": [value]}, f"https://audio.qurancdn.com/wbw/001_001_00{value}.mp3"
+
+    inputs, outputs = interactive(
+        model,
+        inputs=[pn.widgets.Select(value=1, options=[1, 2, 3, 4])],
+    )
+    assert outputs[0].object
+    assert outputs[1].object
+    return pn.Row(pn.Column(*inputs), outputs)
+
+
+def test_alternative_output():
+    def model(value):
+        return f"https://audio.qurancdn.com/wbw/001_001_00{value}.mp3"
+
+    select = pn.widgets.Select(value=1, options=[1, 2, 3, 4])
+    inputs, outputs = interactive(
+        model,
+        inputs=select,
+        outputs=pn.pane.Str,
+    )
+    assert inputs == select
+    assert outputs[0].object
+    assert outputs[0].object
+    return pn.Row(pn.Column(inputs), outputs)
+
+

@@ -7,6 +7,7 @@ NONE_OR_EMPTY_HACK = "&nbsp;"
 
 class BasePipe(param.Parameterized):
     """An abstract base class for Piping an object to an output."""
+
     object = param.Parameter()
     output = param.Parameter(constant=True)
 
@@ -30,6 +31,7 @@ class BasePipe(param.Parameterized):
 
 class PanelPipe(BasePipe):
     """Pipes the object to an output determined by pn.panel"""
+
     transform = param.Callable(default=lambda x: x)
 
     def __init__(self, object=None, **params):

@@ -3,7 +3,7 @@ import param
 import pytest
 
 from paithon import interactive
-from paithon.model.interactive import _to_widget_and_parameter, xbind
+from paithon.interactive.pipe_from import _to_widget_and_parameter, pipe_from
 
 
 def test_interactive():
@@ -16,9 +16,7 @@ def test_interactive():
     output1_org = pn.pane.Str
     output2_org = pn.pane.Str(name="Output 2")
     # When
-    inputs, outputs = interactive(
-        model, inputs=[input1_org, input2_org], outputs=[output1_org, output2_org]
-    )
+    inputs, outputs = interactive(model, inputs=[input1_org, input2_org], outputs=[output1_org, output2_org])
     # Then
     input1, input2 = inputs
     assert isinstance(input1, pn.widgets.TextInput)
@@ -92,7 +90,7 @@ def test_to_ifunction_and_inputs_single_slider():
         return x
 
     # When
-    ifunction, inputs = xbind(function, slider)
+    ifunction, inputs = pipe_from(function, slider)
     # Then
     assert inputs is slider
     assert "__wrapped__" in ifunction.__dict__
@@ -107,7 +105,7 @@ def test_to_ifunction_and_inputs_single_value_throttled_of_slider():
         return x
 
     # When
-    ifunction, inputs = xbind(function, slider.param.value_throttled)
+    ifunction, inputs = pipe_from(function, slider.param.value_throttled)
     # Then
     assert inputs is slider
     assert "__wrapped__" in ifunction.__dict__
@@ -123,7 +121,7 @@ def test_to_ifunction_and_inputs_multi_args():
         return x + y
 
     # When
-    ifunction, inputs = xbind(function, [slider1, slider2.param.value_throttled])
+    ifunction, inputs = pipe_from(function, [slider1, slider2.param.value_throttled])
     # Then
     assert inputs[0] is slider1
     assert inputs[1] is slider2
@@ -141,7 +139,7 @@ def test_to_ifunction_and_inputs_multi_kwargs():
         return x + y
 
     # When
-    ifunction, inputs = xbind(function, {"x": slider1, "y": slider2.param.value_throttled})
+    ifunction, inputs = pipe_from(function, {"x": slider1, "y": slider2.param.value_throttled})
     # Then
     assert inputs["x"] is slider1
     assert inputs["y"] is slider2

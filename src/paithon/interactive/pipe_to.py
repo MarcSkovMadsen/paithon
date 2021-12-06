@@ -7,7 +7,7 @@ from typing import Any, Callable, Optional, Tuple, Union
 
 import panel as pn
 
-from .base_pipes import create_pipe as _get_pipe
+from .pipe_to_pipes import create_pipe as _get_pipe
 
 
 def _validate_function(function):
@@ -18,15 +18,14 @@ def _validate_function(function):
 
 
 def _adjust_results(results: Iterable, num_results: Optional[int] = None):
-    if num_results == 0:
-        yield
-    index = -1
-    for index, result in enumerate(results):
-        if num_results is None or index < num_results:
-            yield result
-    if num_results and index + 1 < num_results:
-        for index in range(index + 1, num_results):
-            yield None
+    if not num_results or num_results > 0:
+        index = -1
+        for index, result in enumerate(results):
+            if num_results is None or index < num_results:
+                yield result
+        if num_results and index + 1 < num_results:
+            for index in range(index + 1, num_results):
+                yield None
 
 
 def _create_pipes(results: tuple, outputs: tuple):
@@ -69,7 +68,7 @@ def _set_results(results: tuple, *pipes):
             _pipe.loading = False
 
 
-def pipe(
+def pipe_to(
     function: Callable,
     *outputs,
     num_outputs: Optional[int] = None,
@@ -95,7 +94,6 @@ def pipe(
         Union[Any, Tuple[Any]]: A single output or tuple of outputs
     """
     _validate_function(function)
-
     inputs = tuple(function._dinfo["kw"].values())  # type: ignore[attr-defined] pylint: disable=protected-access
 
     results = _get_results(function, inputs, num_outputs)

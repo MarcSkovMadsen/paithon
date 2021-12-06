@@ -18,11 +18,11 @@ class Interface(param.Parameterized):
     """Make your AI `model` interactive by providing
 
     - your `model`
-    - a list of `inputs` consisting of widgets
-    - a list of `outputs` consisting of panes"""
+    - a list of `inputs`
+    - a list of `outputs`"""
 
     name: str = param.String(doc="""The name of the model""")
-    description: str = param.String(doc="""A short summary descripion of the model""")
+    description: str = param.String(doc="""A short summary description of the model""")
     article: str = param.String(doc="""A longer article. Supports Markdown""")
 
     model = param.Parameter(

@@ -2,9 +2,9 @@ import panel as pn
 import param
 import pytest
 
-from paithon import pipe
-from paithon.model.base_pipes import NONE_OR_EMPTY_HACK
-from paithon.model.pipe import (
+from paithon import pipe_to
+from paithon.interactive.pipe_to_pipes import NONE_OR_EMPTY_HACK
+from paithon.interactive.pipe_to import (
     _adjust_results,
     _create_pipes,
     _get_pipe,
@@ -64,7 +64,7 @@ def test_constructor():
 
     imodel = pn.bind(two_factor_model, value1=input1, value2=input2)
     # When
-    output1, output2 = pipe(imodel, pn.pane.Str, pn.pane.Str)
+    output1, output2 = pipe_to(imodel, pn.pane.Str, pn.pane.Str)
     # Then
     assert isinstance(output1, pn.pane.Str)
     assert isinstance(output2, pn.pane.Str)
@@ -85,7 +85,7 @@ def test_pipe_can_replace_pn_panel():
 
     imodel = pn.bind(model, value1=input1)
     # When
-    output1 = pipe(imodel)
+    output1 = pipe_to(imodel)
     # Then
     assert isinstance(output1, pn.param.ParamMethod)
     assert isinstance(output1._pane, pn.pane.Markdown)
@@ -106,7 +106,7 @@ def test_pipe_can_infer_outputs():
 
     imodel = pn.bind(model, value1=input1, value2=input2)
     # When
-    output1, output2 = pipe(imodel)
+    output1, output2 = pipe_to(imodel)
     # Then
     assert isinstance(output1, pn.param.ParamMethod)
     assert isinstance(output2, pn.param.ParamMethod)
@@ -134,9 +134,9 @@ def test_pipe_constructor_can_infer():
 
 
 def test_pipe_multi_output_constructor(itwo_factor_model):
-    outputs = pipe(itwo_factor_model, pn.pane.Str, pn.pane.Str)
+    outputs = pipe_to(itwo_factor_model, pn.pane.Str, pn.pane.Str)
     assert isinstance(outputs, pn.Column)
-    outputs = pipe(itwo_factor_model, pn.pane.Str, pn.pane.Str, default_layout=pn.Row)
+    outputs = pipe_to(itwo_factor_model, pn.pane.Str, pn.pane.Str, default_layout=pn.Row)
     assert isinstance(outputs, pn.Row)
 
 
@@ -168,7 +168,7 @@ def test_pipe_to_extra_outputs():
         return output
 
     imodel = pn.bind(model, slider)
-    outputs = pipe(imodel, num_outputs=10)
+    outputs = pipe_to(imodel, num_outputs=10)
 
     assert len(outputs) == 10
     assert all(tuple(output._pane.object == NONE_OR_EMPTY_HACK for output in outputs))

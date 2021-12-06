@@ -2,7 +2,7 @@ import panel as pn
 import param
 import pytest
 
-from paithon.model.base_pipes import PanelPipe, ParameterizedPipe, create_pipe
+from paithon.interactive.pipe_to_pipes import PanelPipe, ParameterizedPipe, create_pipe
 
 
 @pytest.mark.parametrize("output", [pn.pane.Str, pn.pane.Str()])

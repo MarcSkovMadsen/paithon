@@ -1,3 +1,4 @@
+"""Provides an easy to use interface for you model(s)."""
 import logging
 from typing import Any, Optional
 
@@ -8,7 +9,7 @@ from ..shared.widgets.screenshot import Screenshot
 from .api import ModelApi
 from .model import Model
 from .runner import ModelRunner
-from .view import ModelView
+from .view import InterfaceView
 
 logger = logging.getLogger(__name__)
 
@@ -60,10 +61,10 @@ class Interface(param.Parameterized):
     If True the flag button will not be visible. """,
     )
 
-    view = param.ClassSelector(class_=ModelView)
+    view = param.ClassSelector(class_=InterfaceView)
     api = param.ClassSelector(class_=ModelApi)
 
-    def __init__(
+    def __init__(  # pylint: disable=too-many-arguments)
         self,
         model: Model,
         inputs: Optional[Any] = None,
@@ -94,7 +95,7 @@ class Interface(param.Parameterized):
         input_tools = [submit_button]
         output_tools = [screenshot_button, screenshot]
 
-        params["view"] = ModelView(
+        params["view"] = InterfaceView(
             model=clean_model,
             inputs=clean_inputs,
             input_tools=input_tools,
@@ -104,7 +105,8 @@ class Interface(param.Parameterized):
         params["api"] = ModelApi()
         super().__init__(model=model, inputs=inputs, outputs=outputs, **params)
 
-    def _clean_model(self, model):
+    @staticmethod
+    def _clean_model(model):
         if isinstance(model, Model):
             return model
         if issubclass(model, Model):
@@ -116,6 +118,7 @@ class Interface(param.Parameterized):
         if inputs is None:
             inputs = {}
 
+        # pylint: disable=protected-access
         col = pn.Param(model, parameters=model._function_parameters, widgets=inputs)
         return {key: col[index + 1] for index, key in enumerate(model._function_parameters)}
 

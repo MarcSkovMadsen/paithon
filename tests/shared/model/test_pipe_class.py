@@ -2,7 +2,7 @@ import panel as pn
 import param
 import pytest
 
-from paithon.model.pipe_class import PanelPipe, ParameterizedPipe, pipe
+from paithon.model.base_pipes import PanelPipe, ParameterizedPipe, create_pipe
 
 
 @pytest.mark.parametrize("output", [pn.pane.Str, pn.pane.Str()])
@@ -11,7 +11,7 @@ def test_pipe_to_pane(output):
     object = "hello"
 
     # When
-    result = pipe(output=output, object=object)
+    result = create_pipe(output=output, object=object)
 
     assert isinstance(result, ParameterizedPipe)
     assert result.parameter == "object"
@@ -30,13 +30,6 @@ def test_pipe_to_pane(output):
     result.loading = False
     assert result.output.loading == result.loading
 
-    # When/ Then
-    result.object = None
-    assert not result.output.visible
-    # When/ Then
-    result.object = "again"
-    assert result.output.visible
-
 
 @pytest.mark.parametrize("output", [pn.widgets.TextInput, pn.widgets.TextInput()])
 def test_pipe_to_widget(output):
@@ -44,7 +37,7 @@ def test_pipe_to_widget(output):
     object = "hello"
 
     # When
-    result = pipe(output=output, object=object)
+    result = create_pipe(output=output, object=object)
 
     assert isinstance(result, ParameterizedPipe)
     assert result.parameter == "value"
@@ -63,13 +56,6 @@ def test_pipe_to_widget(output):
     result.loading = False
     assert result.output.loading == result.loading
 
-    # When/ Then
-    result.object = None
-    assert not result.output.visible
-    # When/ Then
-    result.object = "again"
-    assert result.output.visible
-
 
 class CustomParameter(param.Parameterized):
     custom_value = param.String()
@@ -83,7 +69,7 @@ def test_pipe_to_parameter(output):
     object = "hello"
 
     # When
-    result = pipe(output=output, object=object)
+    result = create_pipe(output=output, object=object)
 
     assert isinstance(result, ParameterizedPipe)
     assert result.parameter == "custom_value"
@@ -102,20 +88,13 @@ def test_pipe_to_parameter(output):
     result.loading = False
     assert result.output.loading == result.loading
 
-    # When/ Then
-    result.object = None
-    assert not result.output.visible
-    # When/ Then
-    result.object = "again"
-    assert result.output.visible
-
 
 def test_pipe_no_output():
     # Given
     output = None
     object = "hello"
     # When
-    result = pipe(output=output, object=object)
+    result = create_pipe(output=output, object=object)
 
     assert isinstance(result, PanelPipe)
     assert result.object == object
@@ -140,7 +119,7 @@ def test_pipe_to_function():
     output = lambda x: x + " world"
     object = "hello"
     # When
-    result = pipe(output=output, object=object)
+    result = create_pipe(output=output, object=object)
 
     assert isinstance(result, PanelPipe)
     assert result.object == object

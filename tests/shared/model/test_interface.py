@@ -4,7 +4,7 @@ import pytest
 from conftest import ImageClassificationModel
 
 from paithon import Interface
-from paithon.model.interface import Model, ModelApi, ModelView
+from paithon.model.interface import InterfaceView, Model, ModelApi
 
 
 def test_empty_constructor():
@@ -88,7 +88,7 @@ def test_constructor(model, inputs, outputs):
     assert interactive.flag_options == []
     assert interactive.flag_disabled is False
 
-    assert isinstance(interactive.view, ModelView)
+    assert isinstance(interactive.view, InterfaceView)
     assert isinstance(interactive.api, ModelApi)
 
     assert callable(interactive.api.post)

@@ -1,3 +1,4 @@
+"""The InterfaceView enables you to easily show a Model, inputs, outputs and some tools"""
 from typing import Dict, List
 
 import panel as pn
@@ -6,7 +7,9 @@ import param
 from .model import Model
 
 
-class ModelView(pn.viewable.Viewer):
+class InterfaceView(pn.viewable.Viewer):
+    """The view of an Interface. Enables you to show a Model, inputs, outputs and some tools"""
+
     model: Model = param.ClassSelector(
         class_=Model,
         constant=True,

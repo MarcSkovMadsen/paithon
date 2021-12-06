@@ -1,3 +1,4 @@
+"""An application testing the `interactive` function"""
 import time
 
 import panel as pn
@@ -5,13 +6,16 @@ import panel as pn
 from paithon import interactive
 
 
-def create_layout(inputs, outputs):
+def create_interface(inputs, outputs) -> pn.Row:
+    """Returns a layouts containing the inputs and outputs"""
     if not isinstance(inputs, tuple):
         inputs = (inputs,)
     return pn.Row(pn.Column(*inputs), outputs)
 
 
 def test_multi_output():
+    """Demonstrates that we can make a model with two outputs interactive"""
+
     def model(value):
         time.sleep(0.3)
         return {"data": [value]}, f"https://audio.qurancdn.com/wbw/001_001_00{value}.mp3"
@@ -20,10 +24,12 @@ def test_multi_output():
         model,
         inputs=[pn.widgets.Select(value=1, options=[1, 2, 3, 4])],
     )
-    return create_layout(inputs, outputs)
+    return create_interface(inputs, outputs)
 
 
 def test_alternative_output():
+    """Demonstrates that we can output to a specific pane"""
+
     def model(value):
         time.sleep(0.3)
         return f"https://audio.qurancdn.com/wbw/001_001_00{value}.mp3"
@@ -32,24 +38,49 @@ def test_alternative_output():
     inputs, outputs = interactive(
         model,
         inputs=select,
-        outputs=pn.pane.Str,
+        outputs=pn.widgets.TextAreaInput,
     )
-    return create_layout(inputs, outputs)
+    return create_interface(inputs, outputs)
+
 
 def test_fixed_num_outputs():
+    """Demonstrates that we can output to a specific number of outputs"""
+
     def model(value):
-        return [value for value in range(0,value)]
-    slider = pn.widgets.IntSlider(value=0, start=1, end=10)
-    inputs, outputs = interactive(model,inputs=slider, num_outputs=10)
-    return create_layout(inputs, outputs)
+        return list(range(1, value + 1))
+
+    inputs, outputs = interactive(
+        model, inputs=pn.widgets.IntSlider(value=0, start=0, end=5), num_outputs=5
+    )
+    return create_interface(inputs, outputs)
+
+
+def test_generator_function_with_loading_indicator():
+    """Demonstrates that we can output from a generator function and show loading indicators"""
+
+    def model(value):
+        for index in range(1, value + 1):
+            time.sleep(0.2 * index)
+            yield index ** 2
+
+    inputs, outputs = interactive(
+        model,
+        inputs=pn.widgets.IntSlider(value=0, start=1, end=5).param.value_throttled,
+        num_outputs=5,
+        loading_indicator=True,
+    )
+    return create_interface(inputs, outputs)
+
 
 if __name__.startswith("bokeh"):
     pn.extension(sizing_mode="stretch_width")
     pn.Column(
-        "# Test Alternative Output",
-        test_alternative_output(),
-        "# Test Multi Output",
+        "# Direct to alternative output",
+        test_alternative_output,
+        "# Function with two outputs",
         test_multi_output(),
-        "# Fixed Number of Outputs",
-        test_fixed_num_outputs
+        "# Function with Fixed Number of Outputs",
+        test_fixed_num_outputs,
+        "# Generator Function with loading_indicator",
+        test_generator_function_with_loading_indicator,
     ).servable()

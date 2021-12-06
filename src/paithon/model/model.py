@@ -8,6 +8,8 @@ from param import ParamOverrides
 
 
 class Model(param.ParameterizedFunction):
+    """You model as a ParameterizedFunction which provides argument validation etc."""
+
     _non_function_parameters = ["name"]
 
     _function: Optional[staticmethod] = None
@@ -20,7 +22,12 @@ class Model(param.ParameterizedFunction):
 
     def __call__(self, *args, **params):
         params = self._to_params(*args, **params)
-        return self._function(**params)
+        try:
+            return self._function(**params)
+        except TypeError as exception:
+            if not self._function:
+                raise ValueError("_function is None. Please provide a _function.") from exception
+            raise exception
 
     def _to_params(self, *args, **params):
         args_params = {}
@@ -29,8 +36,8 @@ class Model(param.ParameterizedFunction):
             args_params[key] = value
         params = {**args_params, **params}
 
-        p = ParamOverrides(self, params)
-        return {key: p[key] for key in self._function_parameters}
+        overrides = ParamOverrides(self, params)
+        return {key: overrides[key] for key in self._function_parameters}
 
     @property
     def kwargs(self) -> Dict:

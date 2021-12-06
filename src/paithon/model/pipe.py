@@ -1,12 +1,13 @@
 """The pipe makes it possible to pipe the output(s) of function bound to parameters or widgets to
 specific panes.
 """
+from collections.abc import Iterable
 from itertools import zip_longest
 from typing import Any, Callable, Optional, Tuple, Union
 
 import panel as pn
 
-from .pipe_class import pipe as _get_pipe
+from .base_pipes import create_pipe as _get_pipe
 
 
 def _validate_function(function):
@@ -16,19 +17,16 @@ def _validate_function(function):
         )
 
 
-def _adjust_results(results: Optional[tuple] = None, num_results: Optional[int] = None):
-    if results is None and num_results is None:
-        return tuple()
-    if num_results is None:
-        return results
-    if not results and num_results:
-        return tuple(None for _ in range(num_results))
-    if len(results) < num_results:
-        empty_results = (None for _ in range(num_results - len(results)))
-        return (*results, *empty_results)
-    if len(results) > num_results:
-        return tuple(results[index] for index in range(num_results))
-    return results
+def _adjust_results(results: Iterable, num_results: Optional[int] = None):
+    if num_results == 0:
+        yield
+    index = -1
+    for index, result in enumerate(results):
+        if num_results is None or index < num_results:
+            yield result
+    if num_results and index + 1 < num_results:
+        for index in range(index + 1, num_results):
+            yield None
 
 
 def _create_pipes(results: tuple, outputs: tuple):
@@ -51,20 +49,24 @@ def _get_results(function, inputs, num_results) -> Tuple:
     args = tuple(getattr(input.owner, input.name) for input in inputs)
     kwargs = dict(zip(function._dinfo["kw"].keys(), args))  # type: ignore[attr-defined] pylint: disable=protected-access
     results = function(**kwargs)
-    if not isinstance(results, (list, tuple)):
-        results = (results,)
+    if not isinstance(results, str) and isinstance(results, Iterable):
+        results = (result for result in results)
     else:
-        results = tuple(results)
+        results = (results,)
     return _adjust_results(results, num_results)
 
 
-def _set_result(results: tuple, *pipes):
-    for index, _pipe in enumerate(pipes):
-        try:
-            _pipe.object = results[index]
-        except:
-            _pipe.object = None
+def _set_results(results: tuple, *pipes):
+    index = -1
+    for index, result in enumerate(results):
+        _pipe = pipes[index]
+        _pipe.object = result
         _pipe.loading = False
+
+    if index + 1 < len(pipes):
+        for _pipe in pipes[index:]:
+            _pipe.object = None
+            _pipe.loading = False
 
 
 def pipe(
@@ -97,13 +99,13 @@ def pipe(
     inputs = tuple(function._dinfo["kw"].values())  # type: ignore[attr-defined] pylint: disable=protected-access
 
     results = _get_results(function, inputs, num_outputs)
-    pipes = _create_pipes(results, outputs)
+    pipes = _create_pipes(tuple(results), outputs)
     outputs = tuple(pipe.output for pipe in pipes)
 
     def _handle_change(*_):
         _set_loading(pipes, True and loading_indicator)
         results = _get_results(function, inputs, num_results=num_outputs)
-        _set_result(results, *pipes)
+        _set_results(results, *pipes)
 
     for _input in inputs:
         _input.owner.param.watch(_handle_change, parameter_names=[_input.name])

@@ -40,7 +40,7 @@ class ModelStats(param.Parameterized):
             ValueError: if the duration provided is negative
         """
         if duration < 0:
-            raise ValueError(f"A negative duration is not allowed")
+            raise ValueError("A negative duration is not allowed")
         with param.edit_constant(self):
             self.runs += 1
             self.duration_total += duration
@@ -52,6 +52,8 @@ class ModelStats(param.Parameterized):
 
 
 class ModelRunner(param.Parameterized):
+    """A widget for interactively running a model"""
+
     value = param.ClassSelector(
         class_=Model,
         constant=True,
@@ -131,8 +133,8 @@ class ModelRunner(param.Parameterized):
             if len(self.outputs) == 1:
                 self.outputs[0].object = result
             else:
-                for result, output in zip(result, self.outputs):
-                    output.object = result
+                for result_, output in zip(result, self.outputs):
+                    output.object = result_
 
     @param.depends("value", watch=True)
     def _reset_stats(self):
@@ -178,10 +180,11 @@ class ModelRunner(param.Parameterized):
         clean_model = self.value
         watchers = []
 
-        def handle_parameter_changed(*events):
+        def handle_parameter_changed(*_):
             if not self.auto_submit:
                 return
 
+            # pylint: disable=protected-access
             args = [
                 getattr(clean_model, parameter) for parameter in clean_model._function_parameters
             ]
@@ -190,6 +193,7 @@ class ModelRunner(param.Parameterized):
         if initial_run:
             self.run()
 
+        # pylint: disable=protected-access
         for parameter in clean_model._function_parameters:
             watcher = clean_model.param.watch(handle_parameter_changed, parameter)
             watchers.append(watcher)

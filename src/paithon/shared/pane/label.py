@@ -74,7 +74,6 @@ class Label(pn.reactive.ReactiveHTML):
     top_object = param.List(constant=True)
 
     _base_options = param.Dict(CONFIG, constant=True)
-    # <div id="label" style="height:50%;font-size:50px;text-align:center;font-weight:900">${label}</div>
     _template = """
     <svg xmlns="http://www.w3.org/2000/svg" height="50%" width="100%" viewBox="0 0 110 50">
         <text x="50%" y="50%" text-anchor="middle" alignment-baseline="central" dominant-baseline="central" font-size="1em">${label}</text>

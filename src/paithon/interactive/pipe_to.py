@@ -46,7 +46,7 @@ def _set_loading(pipes, loading):
 
 def _get_results(function, inputs, num_results) -> Tuple:
     args = tuple(getattr(input.owner, input.name) for input in inputs)
-    kwargs = dict(zip(function._dinfo["kw"].keys(), args))  # type: ignore[attr-defined] pylint: disable=protected-access
+    kwargs = dict(zip(function._dinfo["kw"].keys(), args))  # typing: ignore[attr-defined] pylint: disable=protected-access
     results = function(**kwargs)
     if not isinstance(results, str) and isinstance(results, Iterable):
         results = (result for result in results)
@@ -94,7 +94,7 @@ def pipe_to(
         Union[Any, Tuple[Any]]: A single output or tuple of outputs
     """
     _validate_function(function)
-    inputs = tuple(function._dinfo["kw"].values())  # type: ignore[attr-defined] pylint: disable=protected-access
+    inputs = tuple(function._dinfo["kw"].values())  # typing: ignore[attr-defined] pylint: disable=protected-access
 
     results = _get_results(function, inputs, num_outputs)
     pipes = _create_pipes(tuple(results), outputs)

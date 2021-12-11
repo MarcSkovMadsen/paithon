@@ -2,7 +2,7 @@
 from typing import Optional, Tuple
 
 import panel as pn
-import param
+from panel.layout.base import ListLike
 
 from .pipe_to import pipe_to
 from .pipe_from import pipe_from
@@ -15,8 +15,8 @@ def _to_tuple(outputs) -> Tuple:
     return tuple(outputs)
 
 def interactive(
-    model, inputs, outputs=None, num_outputs: Optional[int] = None, loading_indicator=False
-):
+    model, inputs, outputs=None, num_outputs: Optional[int] = None, loading_indicator=False, default_layout: ListLike=pn.Row, **params
+) -> ListLike:
     """Returns input widgets and outputs for your model. The inputs
 
     Args:
@@ -27,7 +27,7 @@ def interactive(
         loading_indicator (bool, optional): [description]. Defaults to False.
 
     Returns:
-        [type]: [description]
+        ListLike: A layout of inputs and outputs
     """
     ifunction, inputs = pipe_from(model, inputs)
 
@@ -35,4 +35,4 @@ def interactive(
     outputs = pipe_to(
         ifunction, *outputs, loading_indicator=loading_indicator, num_outputs=num_outputs
     )
-    return pn.Row(inputs, outputs)
+    return default_layout(inputs, outputs, **params)

@@ -188,3 +188,5 @@ def test_set_results_works_with_generator():
     pipes = tuple(_get_pipe(output=lambda x: str(x), object=-1) for index in range(0, 4))
     _set_results(results_generator, *pipes)
     assert not pipes[3].object
+
+

@@ -27,10 +27,10 @@ def test_interactive():
     assert output2 == output2_org
 
     input1.value = "Hello"
-    output1.object == input1.value
+    assert output1.object == input1.value
 
     input2.value = "World"
-    output2.object == input1.value
+    assert output2.object == input2.value
 
 
 def test_multi_output():
@@ -146,3 +146,14 @@ def test_to_ifunction_and_inputs_multi_kwargs():
     assert "__wrapped__" in ifunction.__dict__
     assert ifunction.__dict__["_dinfo"]["kw"]["x"] is slider1.param["value"]
     assert ifunction.__dict__["_dinfo"]["kw"]["y"] is slider2.param["value_throttled"]
+
+def test_example():
+    def video_model(value):
+        return f'<img id="slideshow" height="300" src="https://picsum.photos/800/300?image={value}"/>'
+
+    inputs, outputs = interactive(
+        video_model,
+        inputs=pn.widgets.RadioButtonGroup(value=1, options=[0, 1, 2, 3, 4]),
+        outputs=pn.pane.Str,
+        name="Basic"
+    )

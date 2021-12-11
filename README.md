@@ -75,3 +75,8 @@ When I get the time I would like to
 - 0.0.3: Fix some broken links
 - 0.0.2: Add ImageInput and DocStringViewer
 - 0.0.1: First Version
+
+## Todo
+
+This is a quick todo list for now. Will eventually be turned into Github issues.
+

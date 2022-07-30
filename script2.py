@@ -1,12 +1,11 @@
 import panel as pn
+import datetime
 
-pn.extension(sizing_mode="stretch_width")
+template = """
+This page was created {{ asof }}
+"""
 
+tmpl = pn.Template(template)
+tmpl.add_variable('asof', datetime.datetime.now())
 
-def data(n):
-    return {index: index for index in range(n)}
-
-
-slider = pn.widgets.IntSlider(value=0, start=0, end=100)
-idata = pn.bind(data, slider)
-pn.Column(slider, idata, "Something else").servable()
+tmpl.servable()

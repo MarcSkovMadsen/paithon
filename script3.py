@@ -1,26 +1,26 @@
+"""The BeforeAfterSlider layout enables you to quickly compare two panels"""
+import hvplot.pandas
+import pandas as pd
 import panel as pn
 import param
-import hvplot.pandas
-
-pn.extension(sizing_mode="stretch_width")
-
-ACCENT_COLOR="#D2386C"
 
 CSS = """
 .before-after-container {
     position: relative;
     height:100%;
     width:100%
-    border: 2px solid white;
 }
-.before-after-container .img {
+.before-after-container .outer {
     position: absolute;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
 }
-
+.before-after-container .inner,
+ {
+    height: 100%
+}
 .before-after-container .slider {
     position: absolute;
     -webkit-appearance: none;
@@ -38,110 +38,100 @@ CSS = """
 .before-after-container .slider::-webkit-slider-thumb {
     -webkit-appearance: none;
     appearance: none;
-    width: 12px;
     height: 99%;
-    background: silver;
     cursor: pointer;
     border-radius: 8px
 }
 .before-after-container .slider::-moz-range-thumb {
-    width: 12px;
     height: 99%;
-    background: silver;
     cursor: pointer;
     border-radius: 8px
-}
-.before-after-container .slider-button {
-    pointer-events: none;
-    position: absolute;
-    width: 30px;
-    height: 30px;
-    border-radius: 50%;
-    background-color: silver;
-    left: calc(50% - 18px);
-    top: calc(50% - 18px);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-.before-after-container .slider-button:after {
-    content: '';
-    padding: 3px;
-    display: inline-block;
-    border: solid #5d5d5d;
-    border-width: 0 2px 2px 0;
-    transform: rotate(-45deg);
-}
-.before-after-container .slider-button:before {
-    content: '';
-    padding: 3px;
-    display: inline-block;
-    border: solid #5d5d5d;
-    border-width: 0 2px 2px 0;
-    transform: rotate(135deg);
-}
-"""
+}"""
 
-pn.config.raw_css.append(CSS)
+class BeforeAfterSlider(pn.reactive.ReactiveHTML):
+    """The BeforeAfterSlider layout enables you to quickly compare two panels layed out on top of
+    each other with `value` percent of the *before* panel shown on one side of a slider and
+    100-`value` percent shown on the other side."""
+    value = param.Integer(50, bounds=(0, 100), doc="""
+        The percentage of the *after* panel to show.""")
+    before = param.Parameter(allow_None=False, doc="""
+        The before panel""")
+    after = param.Parameter(allow_None=False, doc="""
+        The after panel""")
 
-class BeforeAfterLayout(pn.reactive.ReactiveHTML):
-    value = param.Integer(50, bounds=(0,100))
-    left2 = param.Parameter(allow_None=False)
-    right2 = param.Parameter(allow_None=False)
+    slider_width = param.Integer(default=12, bounds=(0, 100), doc="""
+        The width of the slider in pixels""")
+    slider_color = param.Color(default="silver", doc="""
+        The color of the slider""")
 
-
-    _template = """
+    _template = f"<style>{CSS}</style>""" + """
+<style id="slider_style"></style>
 <div id="container" class='before-after-container'>
-    <div id="right" class='img background-img' style="height:100%;">
-        <div id="right_inner" style="height:100%;">${right2}</div>
+    <div id="before" class='outer'>
+        <div id="before_inner" class="inner" >${before}</div>
     </div>
-    <div id="left" class='img foreground-img' style="height:100%;overflow:hidden">
-        <div id="left_inner" style="height:100%">${left2}</div>
+    <div id="after" class='outer' style="overflow:hidden">
+        <div id="after_inner" class="inner">${after}</div>
     </div>
-    <input type="range" min="1" max="100" value="${value}" class="slider" name='slider' id="slider" oninput="${script('handle_change')}"></input>
+    <input type="range" min="1" max="100" value="${value}" class="slider" name='slider' id="slider"
+    oninput="${script('handle_change')}"></input>
 </div>
 """
 
     _scripts = {
         "render": """
-console.log(left)
-state.right_inner=right.children[0]
-state.left_inner=left.children[0]
-function setImageWidth(){
+function setPanelWidth(){
     width=view.el.offsetWidth-12
-    state.left_inner.style.width=`${width}px`
-    state.right_inner.style.width=`${width}px`
+    after.children[0].style.width=`${width}px`
+    before.children[0].style.width=`${width}px`
 }
-setImageWidth()
-window.addEventListener("resize", setImageWidth);
+setPanelWidth()
+window.addEventListener("resize", setPanelWidth);
 
-adjustment = parseInt((100-data.value)/100*18)
-left.style.width=`calc(${data.value}% - ${adjustment}px)`
+self.value()
+self.slider_width()
 """,
         "handle_change": """
-const sliderPos = parseInt(event.target.value);
-adjustment = parseInt((100-sliderPos)/100*18)
-left.style.width=`calc(${sliderPos}% - ${adjustment}px)`
-data.value=parseInt(sliderPos)
+data.value=parseInt(event.target.value);
 """,
         "value": """
-const sliderPos = data.value
 adjustment = parseInt((100-data.value)/100*18)
-left.style.width=`calc(${sliderPos}% - ${adjustment}px)`
-"""
+after.style.width=`calc(${data.value}% - ${adjustment}px)`
+""",
+        "slider_color": "self.slider_style()",
+        "slider_width": "self.slider_style()",
+        "slider_style": """
+slider_style.innerHTML=`
+.before-after-container .slider::-webkit-slider-thumb {
+    width: ${data.slider_width}px;
+    background: ${data.slider_color};
+}
+.before-after-container .slider::-moz-range-thumb {
+    width: ${data.slider_width}px;
+    background: ${data.slider_color};
+}`
+""",
     }
 
-import pandas as pd
-data = pd.DataFrame({"y": range(10)})
-left = data.hvplot().opts(color="red", line_width=6, responsive=True, height=700)
-right = data.hvplot().opts(color="green", line_width=6, responsive=True, height=700)
 
-before_after = BeforeAfterLayout(
-    value=20,left2=left,right2=right, height=800
-)
-controls = pn.Param(before_after, parameters=["value"])
+pn.extension(sizing_mode="stretch_width")
+
+ACCENT_COLOR = "#D2386C"
+
+data = pd.DataFrame({"y": range(10)})
+before = data.hvplot().opts(color="green", line_width=6, responsive=True, height=700)
+after = data.hvplot().opts(color="red", line_width=6, responsive=True, height=700)
+
+before = pn.Spacer(background="red", sizing_mode="stretch_both")
+after = pn.Spacer(background="green", sizing_mode="stretch_both")
+
+before_after = BeforeAfterSlider(value=20, before=before, after=after, height=600)
+controls = pn.Param(before_after, parameters=["value", "slider_width", "slider_color"])
 pn.template.FastListTemplate(
-    site="Awesome Panel", title="Image Slider",
-    sidebar=[controls], main=[before_after],
-    accent_base_color=ACCENT_COLOR, header_background=ACCENT_COLOR
+    site="Awesome Panel",
+    title="Before After Slider",
+    sidebar=[controls],
+    main=[before_after],
+    accent_base_color=ACCENT_COLOR,
+    header_background=ACCENT_COLOR,
 ).servable()

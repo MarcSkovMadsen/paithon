@@ -1,74 +1,204 @@
-import time
+"""This module contains functionality to view docstrings of Parameterized Classes
+"""
+from typing import Dict, Tuple
 
-import gradio as gr
-import requests
-import tensorflow as tf
-
-inception_net = tf.keras.applications.InceptionV3() # load the model
-
-# Download human-readable labels for ImageNet.
-response = requests.get("https://git.io/JJkYN")
-labels = response.text.split("\n")
-
-def classify_image(inp):
-    if not inp:
-        return []
-    inp2 = numpy_array_from_data_uri(inp, shape=(299,299)) # inp1.reshape((-1, 299, 299, 3))
-    inp2=inp2.reshape((-1, 299, 299, 3))
-    inp3 = tf.keras.applications.inception_v3.preprocess_input(inp2)
-    prediction = inception_net.predict(inp3).flatten()
-    bla= [{"label": labels[i], "score": float(prediction[i])} for i in range(1000)]
-    bla = sorted(bla, key=lambda x: -x["score"])
-    return bla
-
+import ansiconv
 import panel as pn
+import param
 
-from paithon.image.base.pillow import numpy_array_from_data_uri
-from paithon.image.widgets import ImageInput
-from paithon.shared.pane import Label
-from paithon.shared.widgets import Screenshot
+# Inspiration at https://iterm2colorschemes.com/
+ANSI_THEMES = {
+    "Solarized": {  # https://ethanschoonover.com/solarized/
+        "default": {
+            "background": "#fdf6e3",  # Background
+            "color": "#657b83",  # Text
+            "red": "#cb4b16",  # Parameters changed, 2nd row in table
+            "green": "#859900",  # heading
+            "blue": "#268bd2",  # Table Header, 1st row in table
+            "cyan": "#2aa198",  # soft bound values
+        },
+        "dark": {
+            "background": "#002b36",
+            "color": "#839496",
+            "red": "#cb4b16",
+            "green": "#859900",
+            "blue": "#268bd2",
+            "cyan": "#2aa198",  # soft bound values
+        },
+    },
+    "Tomorrow": {  # https://github.com/chriskempson/tomorrow-theme
+        "default": {
+            "background": "inherit",  # "#ffffff",
+            "color": "#4d4d4c",  # Foreground
+            "red": "#c82829",
+            "green": "#718c00",
+            "blue": "#4271ae",
+            "cyan": "#3e999f",  # aqua
+        },
+        "dark": {
+            "background": "inherit",  # "#1d1f21",
+            "color": "#c5c8c6",
+            "red": "#cc6666",
+            "green": "#b5bd68",
+            "blue": "#81a2be",
+            "cyan": "#2aa198",
+        },
+    },
+}
 
-pn.extension(sizing_mode="stretch_width")
-image_input = ImageInput(height=800)
+LAYOUT_PARAMETERS = {
+    "background",
+    "height",
+    "width",
+    "sizing_mode",
+    "scroll",
+    "min_height",
+    "max_height",
+    "min_width",
+    "max_width",
+}
 
-inputs = [image_input]
-model = classify_image
-outputs = [Label(height=800)]
+def get_theme() -> str:
+    """Returns the current theme: 'default' or 'dark'
 
-submit_button=pn.widgets.Button(name="Submit", sizing_mode="fixed", width=100, button_type="primary")
-input_tools=[submit_button]
-screenshot=Screenshot(height=0, width=0,margin=0,)
-screenshot_button = pn.widgets.Button.from_param(screenshot.param.take, button_type="default", width=100, sizing_mode="fixed")
-output_header = pn.pane.Markdown("# Outputs ")
-output_tools = [screenshot_button, screenshot]
-watchers = []
+    Returns:
+        str: The current theme
+    """
+    args = pn.state.session_args
+    if "theme" in args and args["theme"][0] == b"dark":
+        return "dark"
+    return "default"
 
-def update(*events):
-    start = time.time()
 
-    args = [input.uri for input in inputs]
-    results = model(*args)
-    if len(outputs)==1:
-        outputs[0].object = results
-    else:
-        for result, output in zip(results, outputs):
-            output.object = result
+class DocStringViewer(pn.viewable.Viewer):
+    """The DocStringViewer makes viewing the docstring of a Parameterized class easy and
+    beautiful."""
 
-    end = time.time()
-    duration = end-start
-    output_header.object = f"# Outputs: {duration:.2f}s"
-update()
+    object = param.ClassSelector(
+        class_=param.Parameterized,
+        doc="""
+    The Parameterized class to view
+    """,
+    )
+    theme = param.Selector(
+        default="default",
+        objects=["default", "dark"],
+        constant=True,
+        doc="""
+    The theme of the component: 'default' or 'dark.""",
+    )
+    palette = param.Selector(
+        default="Tomorrow",
+        objects=ANSI_THEMES.keys(),
+        doc="""
+    For example `Tomorrow` or `Solarized`.
+    """,
+    )
+    _html = param.String(
+        constant=True,
+        doc="""
+    The html representation of the doc string
+    """,
+    )
 
-for input in inputs:
-    watcher = input.param.watch(update, 'uri')
-    watchers.append(watcher)
+    def __init__(self, object=None, **params):  # pylint: disable=abstract-method, redefined-builtin
+        params, layout_params = extract_layout_parameters(params)
+        if "theme" not in params:
+            params["theme"] = get_theme()
+        if object:
+            params["object"] = object
+        super().__init__(**params)
+        self._html_pane = pn.pane.HTML(sizing_mode="stretch_both")
+        if "scroll" not in layout_params:
+            layout_params["scroll"] = True
+        self.layout = pn.Column(self._html_pane, **layout_params)
+        self._update_html()
 
-input_divider = pn.Spacer(height=2, background="lightgray", sizing_mode="stretch_width", margin=(-10, 0, 25, 0))
-output_divider = pn.Spacer(height=2, background="lightgray", sizing_mode="stretch_width", margin=(-10, 0, 25, 0))
-input_output_divider = pn.layout.Spacer(width=2, background="lightgray", sizing_mode="stretch_height", margin=(0,25))
+    def __panel__(self):
+        return self.layout
 
-pn.Row(
-    pn.Column(pn.Row(pn.pane.Markdown("# Inputs"), pn.Spacer(), *input_tools), input_divider, *inputs,),
-    input_output_divider,
-    pn.Column(pn.Row(output_header, pn.Spacer(), *output_tools), output_divider, *outputs), margin=(10,100)
-).servable()
+    @param.depends("object", "theme", "palette", watch=True)
+    def _update_html(self):
+        with param.edit_constant(self):
+            doc = self.object.__doc__
+            if doc:
+                doc = "\n".join(doc.split("\n")[1:])
+            else:
+                doc = ""
+            self._html = self._to_html(doc, self.theme, self.palette)
+
+    @param.depends("_html", watch=True)
+    def _update_html_pane(self):
+        self._html_pane.object = self._html
+
+    @classmethod
+    def _to_html(cls, txt, theme, palette):
+        if not txt:
+            return ""
+        html = ansiconv.to_html(txt)
+        css = cls._get_css(**ANSI_THEMES[palette][theme])
+        html = f"""
+        <style>{css}</style>
+        <pre class="ansi_fore ansi_back">{html}</pre>
+        """
+        return html
+
+    @staticmethod
+    def _get_css(  # pylint: disable=too-many-arguments
+        background="#000000",
+        color="#FFFFFF",
+        red="#FF0000",
+        green="#00FF00",
+        blue="#0000FF",
+        cyan="#00FFFF",
+    ):
+        return f"""
+    .ansi_fore {{ color: {color}; }}
+    .ansi_back {{ background-color: {background}; padding: 20px; calc(100% - 60px);; border-radius: 4px; opacity: 0.8;font: 1rem Inconsolata, monospace; }}
+    .ansi1 {{ font-weight: bold; }}
+    .ansi3 {{ font-weight: italic; }}
+    .ansi4 {{ text-decoration: underline; }}
+    .ansi9 {{ text-decoration: line-through; }}
+    .ansi30 {{ color: {background}; }}
+    .ansi31 {{ color: {red}; }}
+    .ansi32 {{ color: {green}; }}
+    .ansi33 {{ color: #FFFF00; }}
+    .ansi34 {{ color: {blue}; }}
+    .ansi35 {{ color: #FF00FF; }}
+    .ansi36 {{ color: {cyan}; }}
+    .ansi37 {{ color: {color}; }}
+    .ansi40 {{ background-color: {background}; }}
+    .ansi41 {{ background-color: {red}; }}
+    .ansi42 {{ background-color: {green}; }}
+    .ansi43 {{ background-color: #FFFF00; }}
+    .ansi44 {{ background-color: {blue}; }}
+    .ansi45 {{ background-color: #FF00FF; }}
+    .ansi46 {{ background-color: {cyan}; }}
+    .ansi47 {{ background-color: {color}; }}
+    """
+
+def test_app() -> DocStringViewer:
+    """Returns a DocStringViewer for manual testing.
+
+    Returns:
+        DocStringViewer: [description]
+    """
+    
+
+
+if __name__.startswith("bokeh"):
+    pn.extension(sizing_mode="stretch_width")
+    some_parameterized = DocStringViewer()
+    docs = DocStringViewer(
+        some_parameterized, sizing_mode="stretch_width", palette="Tomorrow", scroll=False
+    )
+    pn.state.location.sync(docs, {"palette": "palette"})
+    controls = pn.Column(
+        pn.pane.Markdown("**Palette**", margin=0),
+        pn.widgets.RadioBoxGroup.from_param(docs.param.palette),
+    )
+    pn.template.FastListTemplate(
+        title="DocStringViewer",
+        sidebar=[controls],
+        main=[docs],
+    ).servable()

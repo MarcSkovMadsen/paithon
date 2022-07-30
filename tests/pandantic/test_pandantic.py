@@ -2,15 +2,18 @@ from datetime import datetime
 from typing import Any, List, Optional
 
 import param
-from param.parameterized import Parameterized
 import pydantic
 import pytest
-from paithon.pandantic import (Pydantic,
-                               _get_parameter_type_from_pydantic_field,
-                               _get_python_type_from_parameter,
-                               param_to_pydantic_class,
-                               pydantic_to_param_class, parameterize)
+from paithon.pandantic import (
+    Pydantic,
+    _get_parameter_type_from_pydantic_field,
+    _get_python_type_from_parameter,
+    param_to_pydantic_class,
+    pydantic_to_param_class,
+    parameterize,
+)
 from pydantic import BaseModel
+
 
 @pytest.fixture
 def user():
@@ -26,6 +29,7 @@ def user():
         "friends": [1, 2, "3"],
     }
     return User(**external_data)
+
 
 @pytest.mark.parametrize(
     ["parameter", "python_type"],
@@ -115,6 +119,7 @@ def test_python_type_to_param():
     parameter = _get_parameter_type_from_pydantic_field(MyClass.__fields__["name"])
     assert parameter == param.String
 
+
 def test_python_type_to_param_list():
     class MyClass(pydantic.BaseModel):
         friends: List[int]
@@ -132,7 +137,7 @@ def test_list_of_int():
 
     param_class = pydantic_to_param_class(pydantic_class)
     assert isinstance(param_class.param.value, param.List)
-    assert param_class.param.value.item_type==int
+    assert param_class.param.value.item_type == int
 
 
 def test_pydantic_to_param():
@@ -153,60 +158,76 @@ def test_pydantic_to_param():
 
 
 def test_pydantic(user):
-    param_user = Pydantic(object=user, sync_from_object=True)
+    param_user = Pydantic(object=user)
     assert isinstance(param_user, param.Parameterized)
-    assert param_user.object==user
-    assert param_user.id==user.id
-    assert param_user.signup_ts==user.signup_ts
-    assert param_user.friends==user.friends
+    assert param_user.object == user
+    assert param_user.id == user.id
+    assert param_user.signup_ts == user.signup_ts
+    assert param_user.friends == user.friends
 
     # When
-    param_user.id=1234
+    param_user.id = 1234
     assert user.id == param_user.id
     param_user.name = "Marc Skov Madsen"
     assert user.name == param_user.name
-    param_user.signup_ts = datetime(2019,6,1,13,23)
+    param_user.signup_ts = datetime(2019, 6, 1, 13, 23)
     assert user.signup_ts == param_user.signup_ts
-    param_user.friends = [1,2,3,4]
+    param_user.friends = [1, 2, 3, 4]
     assert user.friends == param_user.friends
 
+
+
+# Don't know how to implement this.
+# See https://github.com/samuelcolvin/pydantic/discussions/3504
+@pytest.mark.xfail()
+def test_can_sync_from_object(user):
+    # Given
+    param_user = Pydantic(object=user, sync_from_object=True)
     # When
-    user.id=1234567
+    user.id = 1234567
     assert param_user.id == user.id
     user.name = "Philipp Rudiger"
     assert param_user.name == user.name
-    user.signup_ts = datetime(2019,6,1,13,24)
+    user.signup_ts = datetime(2019, 6, 1, 13, 24)
     assert param_user.signup_ts == user.signup_ts
-    user.friends = [1,2,3,4,5]
+    user.friends = [1, 2, 3, 4, 5]
     assert param_user.friends == user.friends
 
 def test_pydantic_can_exclude_fields():
     class User(BaseModel):
         field: Any
 
-    user=User(field="some value")
+    user = User(field="some value")
     param_user = Pydantic(object=user, exclude=["field"])
 
     assert not hasattr(param_user, "field")
-def test_can_parameterize(user):
-    param_user = parameterize(object=user)
-    isinstance(param_user, Parameterized)
-    assert param_user == user.parameterized
 
-def test_can_parameterize_to_custom_field(user):
-    param_user = parameterize(object=user, field="parameterized2")
-    isinstance(user.parameterized2, Parameterized)
-    assert param_user==user.parameterized2
 
-def test_can_parameterize_twice(user):
-    first = parameterize(object=user)
-    second = parameterize(object=user)
-    assert first==second
+def test_parameterized_model_has_valid_dict():
+    """No matter how parameterize is implemented it should not change .dict"""
+    class User(BaseModel):
+        id: int = 123
+        _value: int = 123
 
+    user = User()
+    Pydantic(object=user)
+    user_dict = user.dict()
+    assert user_dict == {"id": 123}
+
+# Expect to fail because
+# We cannot stored parameterized instance on BaseModel.
+# C.f. https://github.com/samuelcolvin/pydantic/discussions/3512
+@pytest.mark.xfail()
+def test_can_parameterize_twice_to_same_object(user):
+    first = Pydantic(object=user)
+    second = Pydantic(object=user)
+    assert first == second
 
 if __name__.startswith("bokeh"):
     import panel as pn
+
     pn.extension(sizing_mode="stretch_width")
+
     class User(BaseModel):
         id: int
         name: str = "John Doe"
@@ -219,9 +240,8 @@ if __name__.startswith("bokeh"):
         "friends": [1, 2, "3"],
     }
     user = User(**external_data)
-    parameterize(object=user)
-    @pn.depends(id=user.parameterized.param.id, watch=True)
+    param_user = parameterize(object=user)
+
+    @pn.depends(id=param_user.param.id, watch=True)
     def write(id):
         print(id)
-
-    pn.Param(user.parameterized, parameters=["name", "id"]).servable()

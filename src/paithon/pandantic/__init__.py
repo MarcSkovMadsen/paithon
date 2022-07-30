@@ -5,6 +5,7 @@ import param
 from param.parameterized import Parameterized
 import pydantic
 from pydantic import BaseConfig, BaseModel, create_model
+from pydantic.types import ConstrainedInt
 
 try:
     import numpy as np
@@ -95,7 +96,7 @@ def pydantic_to_param_class(value) -> param.Parameterized:
 
 
 class Pydantic(param.Parameterized):
-    object = param.ClassSelector(class_=BaseModel)
+    object: BaseModel = param.ClassSelector(class_=BaseModel, constant=True)
 
     def __init__(self, object: BaseModel, sync_to_object=True, sync_from_object=False, exclude=[]):
         super().__init__(object=object)
@@ -106,20 +107,16 @@ class Pydantic(param.Parameterized):
             self.param.update(**values_)
         update_self(object.dict())
 
+        self._watchers=[]
         if sync_to_object:
             self._updating = False
             parameter_names = [key for key in self.param]
-            self.param.watch(self.handle_change, parameter_names=parameter_names)
+            watcher=self.param.watch(self.handle_change, parameter_names=parameter_names)
+            self._watchers.append(watcher)
 
         if sync_from_object:
-            object.Config.validate_assignment=True
-            def watcher(cls, values):
-                update_self(values)
-                return values
-
-            object.__post_root_validators__.append(
-                (False, watcher)
-            )
+            raise NotImplementedError("""I don't know how to do this. See
+            https://github.com/samuelcolvin/pydantic/discussions/3504""")
 
     def handle_change(self, *events):
         if self._updating:
@@ -130,17 +127,7 @@ class Pydantic(param.Parameterized):
             setattr(self.object, ev.name, ev.new)
         self._updating=False
 
-def parameterize(object: BaseModel, sync_to_object=True, sync_from_object=False, field="parameterized"):
-    if hasattr(object, field):
-        if isinstance(getattr(object, field), Pydantic):
-            return getattr(object, field)
-        else:
-            raise ValueError("The field {field} is already in use. Please use another one")
-    parameterized = Pydantic(object=object, sync_to_object=sync_to_object, sync_from_object=sync_from_object)
-    if field:
-        object.__private_attributes__[field]=parameterized
-        object.__setattr__(field, parameterized)
+object_setattr = object.__setattr__
 
-    object.__private_attributes__["__parameterized__"]=True
-    object.__setattr__("__parameterized__", True)
-    return parameterized
+def parameterize(object: BaseModel, sync_to_object=True, sync_from_object=False) -> Pydantic:
+    return Pydantic(object=object, sync_to_object=sync_to_object, sync_from_object=sync_from_object)
